@@ -33,8 +33,9 @@ item should be committed and pushed separately.
   ScoopShare data were changed.
 - Note: automatic GitHub deployments remain optional and unavailable.
 - Completed TODO: configured Vercel to recognize the Next.js framework and
-  created a protected Preview deployment through the Vercel CLI:
-  https://critical-mixer-pv6vkeebt-joshuabrainjaffe.vercel.app
+  created a protected Preview deployment through the Vercel CLI. The latest
+  Preview, including the QR work, is:
+  https://critical-mixer-bxyv7sf30-joshuabrainjaffe.vercel.app
 - The Preview is protected by Vercel Authentication. No Production deployment
   was made.
 - Completed TODO: added an authenticated game-status/server-time endpoint and
