@@ -1,4 +1,4 @@
-import { isCompany, normalizePlayerName } from "@/lib/identity";
+import { normalizePlayerName } from "@/lib/identity";
 import { joinPlayer, PlayerServiceUnavailableError } from "@/lib/players";
 import { redisConfigured } from "@/lib/redis";
 
@@ -18,8 +18,8 @@ export async function POST(request: Request): Promise<Response> {
     : {};
   const name = normalizePlayerName(input.name);
 
-  if (!name || !isCompany(input.company)) {
-    return json({ error: "Enter a name and choose your company." }, 400);
+  if (!name) {
+    return json({ error: "Enter your name to join." }, 400);
   }
 
   if (!redisConfigured || !process.env.QR_SECRET) {
@@ -27,7 +27,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   try {
-    const session = await joinPlayer(name, input.company);
+    const session = await joinPlayer(name);
     return json({ session, recoveryCode: session.recoveryCode }, 201);
   } catch (error) {
     if (error instanceof PlayerServiceUnavailableError) {

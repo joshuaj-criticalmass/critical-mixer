@@ -1,11 +1,10 @@
 # Critical Mixer — Build Specification
 
-A 3-day, in-person "meet people" game for the merged London office of
-**Critical Mass, artbot., Tribal, and RAPP**. Everyone gets a live QR code on
-their phone. When two people meet, they scan each other's codes. Meeting
-someone from another company is worth more than meeting someone from your own.
-Most points at the end of Day 3 wins, and ties produce multiple winners,
-revealed on a "Wrapped"-style big-screen page.
+A 3-day, in-person "meet people" game for the unified London office team.
+Everyone gets a live QR code on their phone. When two people meet, they scan
+each other's codes. Every confirmed connection is worth one point, regardless
+of anyone's former company. Most points at the end of Day 3 wins, and ties
+produce multiple winners, revealed on a "Wrapped"-style big-screen page.
 
 - **Players:** ~500, all in the London office
 - **Dates:** **Tuesday 3 – Thursday 5 November 2026**, started and ended
@@ -17,15 +16,14 @@ revealed on a "Wrapped"-style big-screen page.
 
 ## 1. Game Rules
 
-1. A player opens the app, enters their **name**, picks their **company**, and
-   gets a **recovery code** (they're told to screenshot it).
+1. A player opens the app, enters their **name**, and gets a **recovery code**
+  (they're told to screenshot it). There is no company selection or company
+  field in a player's game identity.
 2. The player sees their **personal QR code**, which refreshes every 30 seconds.
 3. Players meet in person. **Player A scans Player B's code.** The meet is now
    *pending*, and both phones show a shared **icebreaker question**.
 4. **Player B scans Player A's code back within 10 minutes.** The meet is now
-   *confirmed*, and both players get points:
-   - **2 points** if they're from different companies
-   - **1 point** if they're from the same company
+  *confirmed*, and both players get **1 point**.
 5. Each pair can only score once. Re-scanning someone you've already met
    shows "You've already met Sam!" and awards nothing.
 6. When the host ends the game, scanning stops, the leaderboard is revealed,
@@ -80,11 +78,11 @@ ScoopShare's.
 ## 4. Screens (Player, Mobile-First)
 
 ### 4.1 Join — `/`
-- Fields: **Name** (free text, 1–40 chars, trimmed) and **Company**
-  (a segmented control or dropdown: Critical Mass, artbot., Tribal, RAPP).
+- Field: **Name** (free text, 1–40 chars, trimmed). Do not ask players to pick,
+  enter, or identify with a company.
 - A "Join" button, plus a secondary link: "Already playing? Log back in".
-- One line of privacy copy: *"We use your name, company and game activity to
-  run Critical Mixer, and delete your stored data after the event."*
+- One line of privacy copy: *"We use your name and game activity to run
+  Critical Mixer, and delete your stored data after the event."*
 - On success, show the **recovery code screen** (4.2) once.
 
 ### 4.2 Recovery code — shown once after joining
@@ -98,8 +96,8 @@ ScoopShare's.
 The main screen, top to bottom:
 
 1. **Your QR code**, large and centred. It refreshes every 30s, with a subtle
-   progress ring so people understand it's live. Name and company appear
-   under it.
+  progress ring so people understand it's live. The player's name appears
+  under it.
 2. **"Scan someone"**, a big primary button that opens the camera scanner.
 3. **Pending scan-backs.** A card for each person who has scanned you and is
    waiting for you to scan them back: *"Priya (Tribal) scanned you — scan her
@@ -114,7 +112,7 @@ The main screen, top to bottom:
    ```
    plus a nudge: *"11 more points to reach the top 3"* (hidden if the player
    is already there).
-6. **People you've met:** a collapsible list (name, company, time).
+6. **People you've met:** a collapsible list (name, time).
 
 When the game status is `lobby`, the QR code is visible but greyed out with
 *"Game starts soon"*, and scanning is disabled.
@@ -123,9 +121,9 @@ When it's `ended`, the screen switches to the **results view** (4.6).
 ### 4.4 Scanner
 - A full-screen camera view using `qr-scanner`, with a close button.
 - On a successful decode, call `POST /api/scan` and show the result sheet:
-  - **First scan (pending):** *"Nice! Now let **Sam (RAPP)** scan you back."*
+  - **First scan (pending):** *"Nice! Now have **Sam** scan you back."*
     plus the **icebreaker question**.
-  - **Second scan (confirmed):** *"You met **Sam**! +2 points"* with a small
+  - **Second scan (confirmed):** *"You met **Sam**! +1 point"* with a small
     celebration (confetti burst or a haptic via `navigator.vibrate` where
     supported).
   - **Already met:** *"You've already met Sam!"*
@@ -148,9 +146,8 @@ camera app opens this page.
 > code covers anyone who gets stuck.
 
 ### 4.6 Results view (game ended)
-- *"That's a wrap!"*, followed by the winner name(s) with company, the top-3 tiers
-  now with names revealed, and the player's own final stats (points, people
-  met, how many from each company).
+- *"That's a wrap!"*, followed by the winner name(s), the top-3 tiers now with
+  names revealed, and the player's own final stats (points and people met).
 
 ### 4.7 Log back in — `/recover`
 - Fields: **Name** and **Recovery code**.
@@ -168,10 +165,10 @@ camera app opens this page.
   and **End game** (`active → ended`), each with an "Are you sure?" confirm.
   A **Reopen** option (`ended → active`) is there in case End is pressed by
   mistake.
-- **Live glance:** player count, confirmed meets, cross-company %, and the
-  current top-3 *with* names (host only).
+- **Live glance:** player count, confirmed meets, and the current top-3 *with*
+  names (host only).
 - **Player recovery:** search by name (partial match) and see results with
-  name, company, points, and join time. A **"Generate login QR"** button shows
+  name, points, and join time. A **"Generate login QR"** button shows
   a one-time QR that logs that player back in on their phone
   (`/r/[signedToken]`, valid 10 minutes, single use).
 - **Danger zone:** "Wipe all game data", which requires typing `WIPE` to confirm.
@@ -184,21 +181,16 @@ the game is `ended`.
 
 Suggested sequence (all from the data in §6):
 
-1. **Intro:** "Critical Mixer — 3 days. 4 companies. 1 office."
+1. **Intro:** "Critical Mixer — 3 days. One team. One office."
    (subtitle: "3–5 November 2026")
-2. **Players:** "**487** of you joined" with an animated bar per company.
+2. **Players:** "**487** of you joined" with an animated total-player count.
 3. **Meets:** "**3,912** meets made", with a big number count-up.
-4. **Crossing lines:** "**71%** were cross-company".
-5. **Best pairing:** a 4×4 company matrix heat-map, then a highlight:
-   "**Tribal × RAPP** met the most — 642 times".
-6. **Most social company:** the highest average points per player.
-7. **Peak mingling:** "The busiest hour was **Wednesday, 1–2pm**", with a
+4. **Peak mingling:** "The busiest hour was **Wednesday, 1–2pm**", with a
    small hourly bar chart across the 3 days.
-8. **The chase:** the 3rd and 2nd place tiers revealed (names and points).
-9. **Drumroll…:** a pause slide.
-10. **Winner(s):** a big name card for each winner with their company and
-    points. If there's a tie, all winners appear side by side ("It's a
-    tie!"). Confetti.
+5. **The chase:** the 3rd and 2nd place tiers revealed (names and points).
+6. **Drumroll…:** a pause slide.
+7. **Winner(s):** a big name card for each winner with their points. If there's
+  a tie, all winners appear side by side ("It's a tie!"). Confetti.
 
 Visual direction: bold type, big numbers, saturated colour blocks, one stat per
 slide, and smooth transitions. Think Spotify Wrapped, but in Critical Mixer
@@ -212,11 +204,11 @@ branding (see §5.3).
   identity; create `styles/tokens.css` from those tokens and mirror them into
   the Tailwind theme. Do not create separate company themes or company color
   palettes.
-- **Company logos are supporting assets**, not separate product brands. Add
-  the Critical Mass, artbot., Tribal, and RAPP logos when supplied, and use
-  them where useful for company identification (for example, selectors,
-  player details, or reveal statistics). Keep the product-wide interface and
-  visual identity on the Critical Mass token system.
+- **Company logos are supporting assets**, not player identities or scoring
+  groups. Add the Critical Mass, artbot., Tribal, and RAPP logos when supplied
+  for appropriate brand acknowledgement; never use them to segment players,
+  scores, or game statistics. Keep the product-wide interface on the Critical
+  Mass token system.
 - Use PP Object Sans as the primary typeface and Compacta STD sparingly for
   impactful headlines, following the supplied token roles. Confirm font
   licensing and use approved font files before bundling them; retain sensible
@@ -268,7 +260,7 @@ branding (see §5.3).
 
 ## 7. Identity & Recovery (No Email)
 
-- **Session:** `{ playerId, playerKey, name, company }` is kept in localStorage.
+- **Session:** `{ playerId, playerKey, name }` is kept in localStorage.
   Every API call sends `playerId`, plus a lightweight `sessionSig =
   HMAC(QR_SECRET, playerId + ":session")` that the server issued, so nobody can
   act as another player just by knowing their ID.
@@ -283,8 +275,9 @@ branding (see §5.3).
     with TTL). This is low stakes, so keep it simple.
 - **Admin recovery:** see 5.1. The token is `playerId.expiry.sig`, signed with
   `QR_SECRET`, and marked used in Redis on redemption (`SET ... NX EX 600`).
-- **Duplicate names** are fine. People are shown as "Sam K. · Tribal" where
-  possible, and the company always appears next to the name.
+- **Duplicate names** are fine. Where two players share a name, use a short
+  non-company disambiguator such as an initial in player-facing lists; admin
+  tools may use the player ID.
 
 ---
 
@@ -293,14 +286,14 @@ branding (see §5.3).
 | Key | Type | Contents |
 |---|---|---|
 | `cmx:public` | string (JSON) | `{ status, startedAt, endedAt, top3: [{points, count}], updatedAt }`. This is the cached public state every poll reads. |
-| `cmx:player:{id}` | hash | `name, company, points, meetCount, recoveryCode, createdAt` |
+| `cmx:player:{id}` | hash | `name, points, meetCount, recoveryCode, createdAt` |
 | `cmx:recovery:{CODE}` | string | `playerId` |
 | `cmx:scores` | sorted set | `playerId → points` |
 | `cmx:pair:{lowId}:{highId}` | hash | `{lowId}: scanTs, {highId}: scanTs, confirmedAt` |
 | `cmx:pending:{id}` | sorted set | `scannerId → scanTs` (people waiting for *this* player to scan them back) |
 | `cmx:met:{id}` | sorted set | `otherId → confirmedTs` (for the "people you've met" list) |
-| `cmx:stats` | hash | `players`, `players:{company}`, `meets`, `crossMeets`, `pair:{A}|{B}` (sorted company names), `hour:{YYYY-MM-DDTHH}` |
-| `cmx:names` | hash | `playerId → "name|company"` (for admin search and the reveal; one HGETALL instead of N lookups) |
+| `cmx:stats` | hash | `players`, `meets`, `hour:{YYYY-MM-DDTHH}` |
+| `cmx:names` | hash | `playerId → name` (for admin search and reveal; one HGETALL instead of N lookups) |
 | `cmx:ratelimit:{ip}` | string w/ TTL | failed recovery attempts |
 | `cmx:recover-used:{tokenSig}` | string w/ TTL | single-use admin login tokens |
 
@@ -316,7 +309,7 @@ command in a pipeline still counts toward the command budget.
 
 | Route | Purpose |
 |---|---|
-| `POST /api/join` | `{ name, company }` → creates the player and recovery code, increments stats, returns the session + `playerKey` + recovery code |
+| `POST /api/join` | `{ name }` → creates the player and recovery code, increments player stats, returns the session + `playerKey` + recovery code |
 | `POST /api/recover` | `{ name, code }` → returns the session |
 | `POST /api/recover-link` | `{ token }` → validates the admin-generated token, returns the session |
 | `GET /api/me` | Returns the poll payload (below) |
@@ -331,8 +324,8 @@ Returns:
   status: 'lobby' | 'active' | 'ended',
   me: { points, meetCount },
   top3: [{ points, count }],          // names hidden unless status === 'ended'
-  pending: [{ id, name, company, scannedAt }],
-  winners?: [{ name, company, points }] // only when ended
+  pending: [{ id, name, scannedAt }],
+  winners?: [{ name, points }] // only when ended
 }
 ```
 Commands: `GET cmx:public`, `HMGET cmx:player:{id} points meetCount`, and
@@ -346,7 +339,7 @@ non-empty.
 2. Parse the token → targetId (B), window, sig; verify the signature (no Redis)
 3. Reject if A === B
 4. Read cmx:public → reject unless status === 'active'
-5. HMGET B's name, company (and A's company) → reject if B doesn't exist
+5. Read B's name → reject if B doesn't exist
 6. Read cmx:pair:{low}:{high}
    - confirmedAt set → "already met"
    - B already scanned A within the last 10 min → CONFIRM (step 7)
@@ -355,12 +348,12 @@ non-empty.
                  return { result: 'pending', other: B, icebreaker }
 7. CONFIRM (in one MULTI):
    - HSET pair confirmedAt
-   - pts = A.company !== B.company ? 2 : 1
+  - pts = 1 for each player, regardless of former company
    - HINCRBY points & meetCount on both players
    - ZINCRBY cmx:scores pts for both
    - ZADD cmx:met:{A} B now; ZADD cmx:met:{B} A now
    - ZREM cmx:pending:{A} B
-   - HINCRBY cmx:stats meets, crossMeets (if cross), pair:{X}|{Y}, hour:{bucket}
+  - HINCRBY cmx:stats meets and hour:{bucket}
    then recompute top3 (§10) and SET cmx:public
    return { result: 'confirmed', other: B, points: pts, icebreaker }
 ```
@@ -486,7 +479,7 @@ money, or religion. Stored in `lib/icebreakers.ts` as a plain array.
 20. If your job had a theme song, what would it be?
 21. What's a book, show, or podcast you keep recommending?
 22. What's the best piece of work you've ever seen land?
-23. What's one thing your company does that the others should steal?
+23. What's one small thing that could make the whole team better?
 24. Window seat or aisle seat?
 25. What's your most controversial food opinion?
 26. If you could swap roles with anyone here for a day, what would you try?
@@ -562,7 +555,8 @@ money, or religion. Stored in `lib/icebreakers.ts` as a plain array.
 ## Open Items
 
 - **Company logo assets:** add supplied/approved Critical Mass, artbot.,
-  Tribal, and RAPP logos where useful for company identification (§5.3).
+  Tribal, and RAPP logos only for supporting brand acknowledgement, never for
+  player identity, scoring, or player segmentation (§5.3).
 - **Production URL:** known once deployed. Nothing in the app depends on it
   (§6); only the poster QR needs generating from it.
 - **Exact start/end times** on 3 and 5 November (the host triggers both, so

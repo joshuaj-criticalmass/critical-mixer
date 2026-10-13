@@ -4,7 +4,6 @@ import {
   createPlayerSession,
   createRecoveryCode,
   normalizeNameForMatch,
-  type Company,
   type PlayerSession,
 } from "./identity";
 
@@ -14,7 +13,6 @@ const playerKey = (id: string) => `cmx:player:${id}`;
 
 type StoredPlayer = {
   name?: string;
-  company?: Company;
   recoveryCode?: string;
 };
 
@@ -26,7 +24,7 @@ function ensureConfigured(): void {
   }
 }
 
-export async function joinPlayer(name: string, company: Company): Promise<PlayerSession> {
+export async function joinPlayer(name: string): Promise<PlayerSession> {
   ensureConfigured();
   const redis = getRedis();
 
@@ -43,19 +41,17 @@ export async function joinPlayer(name: string, company: Company): Promise<Player
         .multi()
         .hset(playerKey(id), {
           name,
-          company,
           points: 0,
           meetCount: 0,
           recoveryCode: code,
           createdAt,
         })
-        .hset("cmx:names", { [id]: `${name}|${company}` })
+        .hset("cmx:names", { [id]: name })
         .zadd("cmx:scores", { score: 0, member: id })
         .hincrby("cmx:stats", "players", 1)
-        .hincrby("cmx:stats", `players:${company}`, 1)
         .exec();
 
-      return await createPlayerSession(id, name, company, code, qrSecret);
+      return await createPlayerSession(id, name, code, qrSecret);
     } catch {
       await redis.del(recoveryCodeKey(code)).catch(() => undefined);
       throw new PlayerServiceUnavailableError();
@@ -83,7 +79,6 @@ export async function recoverPlayer(
   if (
     !id ||
     !record.name ||
-    !record.company ||
     !record.recoveryCode ||
     normalizeNameForMatch(record.name) !== normalizeNameForMatch(name)
   ) {
@@ -96,7 +91,6 @@ export async function recoverPlayer(
   return createPlayerSession(
     id,
     record.name,
-    record.company,
     record.recoveryCode,
     qrSecret
   );

@@ -1,10 +1,6 @@
 import { randomInt } from "node:crypto";
 import { customAlphabet } from "nanoid";
-import { companies, type Company } from "./companies.ts";
 import { recoveryWords } from "./recovery-words.ts";
-
-export { companies };
-export type { Company };
 
 const playerId = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
@@ -18,7 +14,6 @@ export type PlayerSession = {
   playerKey: string;
   sessionSig: string;
   name: string;
-  company: Company;
   recoveryCode: string;
 };
 
@@ -30,10 +25,6 @@ export function normalizePlayerName(value: unknown): string | null {
 
 export function normalizeNameForMatch(value: string): string {
   return value.trim().replace(/\s+/g, " ").toLocaleLowerCase("en-GB");
-}
-
-export function isCompany(value: unknown): value is Company {
-  return typeof value === "string" && companies.includes(value as Company);
 }
 
 export function normalizeRecoveryCode(value: unknown): string | null {
@@ -83,7 +74,6 @@ export async function verifySessionSignature(
 export async function createPlayerSession(
   playerId: string,
   name: string,
-  company: Company,
   recoveryCode: string,
   secret: string
 ): Promise<PlayerSession> {
@@ -92,5 +82,5 @@ export async function createPlayerSession(
     hmacBase64Url(secret, `${playerId}:session`),
   ]);
 
-  return { playerId, playerKey, sessionSig, name, company, recoveryCode };
+  return { playerId, playerKey, sessionSig, name, recoveryCode };
 }

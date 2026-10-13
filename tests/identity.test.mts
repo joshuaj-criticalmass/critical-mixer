@@ -1,10 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
-  companies,
   createPlayerId,
   createRecoveryCode,
-  isCompany,
   normalizeNameForMatch,
   normalizePlayerName,
   normalizeRecoveryCode,
@@ -32,12 +30,6 @@ test("player names are trimmed and limited to forty characters", () => {
 
 test("recovery name comparison ignores case and extra whitespace", () => {
   assert.equal(normalizeNameForMatch("  Sam   Lee "), "sam lee");
-});
-
-test("company validation accepts only the four game companies", () => {
-  assert.deepEqual(companies, ["Critical Mass", "artbot.", "Tribal", "RAPP"]);
-  assert.equal(isCompany("Tribal"), true);
-  assert.equal(isCompany("Other"), false);
 });
 
 test("player IDs are ten base62 characters", () => {

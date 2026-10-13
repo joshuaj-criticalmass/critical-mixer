@@ -131,7 +131,6 @@ export default function PlayPage() {
         {session && (
           <>
             <div className="play-copy">
-              <p className="eyebrow">{session.company}</p>
               <h1>You're in, {session.name}.</h1>
               <p className="intro-copy">{statusMessage}</p>
               <details className="recovery-details">

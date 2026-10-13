@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
-import { companies, type Company } from "@/lib/companies";
 import type { PlayerSession } from "@/lib/identity";
 
 type ApiResponse = {
@@ -14,7 +13,6 @@ type ApiResponse = {
 export default function Home() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [company, setCompany] = useState<Company | "">("");
   const [session, setSession] = useState<PlayerSession | null>(null);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,7 +31,7 @@ export default function Home() {
       const response = await fetch("/api/join", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, company }),
+        body: JSON.stringify({ name }),
         cache: "no-store",
       });
       const result = (await response.json()) as ApiResponse;
@@ -104,23 +102,6 @@ export default function Home() {
                   value={name}
                 />
               </label>
-              <label className="field-group">
-                <span className="field-label">Your company</span>
-                <select
-                  className="text-input select-input"
-                  name="company"
-                  onChange={(event) => setCompany(event.target.value as Company | "")}
-                  required
-                  value={company}
-                >
-                  <option disabled value="">Choose a company</option>
-                  {companies.map((companyName) => (
-                    <option key={companyName} value={companyName}>
-                      {companyName}
-                    </option>
-                  ))}
-                </select>
-              </label>
               {isInAppBrowser && (
                 <p className="browser-notice">
                   Open in Safari or Chrome for the best experience.
@@ -132,8 +113,8 @@ export default function Home() {
               </button>
             </form>
             <p className="privacy-note">
-              We use your name, company and game activity to run Critical
-              Mixer, and delete your stored data after the event.
+              We use your name and game activity to run Critical Mixer, and
+              delete your stored data after the event.
             </p>
             <Link className="secondary-link" href="/recover">
               Already playing? Log back in
