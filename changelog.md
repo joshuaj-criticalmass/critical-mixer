@@ -32,3 +32,8 @@ item should be committed and pushed separately.
   fresh QR/admin secrets without exposing their values. No Redis keys or
   ScoopShare data were changed.
 - Note: automatic GitHub deployments remain optional and unavailable.
+- Completed TODO: configured Vercel to recognize the Next.js framework and
+  created a protected Preview deployment through the Vercel CLI:
+  https://critical-mixer-pv6vkeebt-joshuabrainjaffe.vercel.app
+- The Preview is protected by Vercel Authentication. No Production deployment
+  was made.

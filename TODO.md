@@ -9,7 +9,7 @@ the delivery workflow in [Critical-Mixer-BUILD-SPEC.md](Critical-Mixer-BUILD-SPE
 - [x] Bootstrap the Next.js App Router project, shared token theme, Redis client, and core utilities.
 - [x] Create and locally link a separate Critical Mixer project in the personal Vercel workspace.
 - [x] Connect the existing Upstash database and configure Production/Preview/Development environment variables.
-- [ ] Establish CLI Preview deployments; GitHub-based automatic deployments are optional and remain unavailable.
+- [x] Establish CLI Preview deployments; GitHub-based automatic deployments are optional and remain unavailable.
 - [ ] Connect the Vercel project to `joshuaj-criticalmass/critical-mixer` for automatic deployments, if the Vercel GitHub integration issue is resolved.
 - [ ] Decide what ScoopShare data to export and get explicit approval before any Redis wipe.
 - [x] Implement player join, session handling, recovery codes, and account recovery.
