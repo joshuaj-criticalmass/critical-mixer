@@ -1,0 +1,339 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "meta": {
+    "name": "Critical Mass digital design system",
+    "status": "draft",
+    "source": "https://brandguide.criticalmass.com/",
+    "sourceArtifact": [
+      "docs/criticalmass-brandguide-pages.json",
+      "docs/criticalmass-brandguide-design-system-capture.json"
+    ],
+    "lastReviewed": "2026-09-23",
+    "notes": "Colors from docs/CM_Palette_HexV.png; type scale from docs/CM_TypeHierarchy_II.png; fonts, imagery, usage and downloads from the 2026-09-23 site capture. Remaining nulls are things the guide does not specify."
+  },
+  "color": {
+    "brand": {
+      "rorange": {
+        "value": "#F24711",
+        "type": "color",
+        "status": "confirmed",
+        "source": "docs/CM_Palette_HexV.png",
+        "description": "Primary bold brand color."
+      },
+      "pinkish": {
+        "value": "#FFE7DE",
+        "type": "color",
+        "status": "confirmed",
+        "source": "docs/CM_Palette_HexV.png"
+      },
+      "white": {
+        "value": "#FFFFFF",
+        "type": "color",
+        "status": "confirmed",
+        "source": "docs/CM_Palette_HexV.png"
+      },
+      "black": {
+        "value": "#000000",
+        "type": "color",
+        "status": "confirmed",
+        "source": "docs/CM_Palette_HexV.png",
+        "description": "Used as a high-contrast pairing."
+      },
+      "eggshell": {
+        "value": "#F7FAF2",
+        "type": "color",
+        "status": "confirmed",
+        "source": "docs/CM_Palette_HexV.png",
+        "description": "Light brand color used in contrast combinations."
+      },
+      "calgaryBlue": {
+        "value": "#0C47C7",
+        "type": "color",
+        "status": "confirmed",
+        "source": "docs/CM_Palette_HexV.png"
+      },
+      "skyBlue": {
+        "value": "#D6E6F8",
+        "type": "color",
+        "status": "confirmed",
+        "source": "docs/CM_Palette_HexV.png"
+      }
+    },
+    "usage": {
+      "combinations": [
+        {
+          "name": "Rorange + colors",
+          "feel": "Playful, approachable, ownable; warmth and vibrance."
+        },
+        {
+          "name": "Black + Eggshell",
+          "feel": "Safe, premium, clean, crisp, elegant. Raise black ratio for more bite; raise eggshell to subdue."
+        }
+      ],
+      "rules": [
+        "High contrast first; fewer colors wins.",
+        "Rorange is for moments of impact, from full flood to a subtle hint. Limit by number of rorange items per page, not a fixed ratio.",
+        "For colorful content use a neutral pairing; for text-heavy content add a pop of Rorange or blue.",
+        "Never colorize photography.",
+        "Meet accessibility contrast standards; the guide's accessibility section is not yet published."
+      ],
+      "siteBackground": "#F7FAF2",
+      "source": "https://brandguide.criticalmass.com/colour/usage.html"
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "primary": {
+        "value": "PP Object Sans",
+        "status": "confirmed",
+        "source": "https://brandguide.criticalmass.com/downloads.html",
+        "role": "Headline, body and everything between; the go-to.",
+        "fallback": "sans-serif"
+      },
+      "supporting": {
+        "value": "Compacta STD",
+        "status": "confirmed",
+        "source": "https://brandguide.criticalmass.com/downloads.html",
+        "role": "Brief, impactful headlines only; use sparingly."
+      }
+    },
+    "scale": {
+      "status": "confirmed-from-image",
+      "unit": "pt at artboard scale; sizes are design-comp values, not responsive web sizes",
+      "notes": "Line-height is not specified in the source. CTA size is 'TBD' in the source. Tracking is % of font size (negative = tighter).",
+      "headline1": {
+        "fontFamily": "Compacta",
+        "fontWeight": "regular",
+        "fontSize": "240pt",
+        "letterSpacing": "-2%",
+        "source": "docs/CM_TypeHierarchy_II.png"
+      },
+      "headline2": {
+        "fontFamily": "Object Sans",
+        "fontWeight": "bold",
+        "fontSize": "80pt",
+        "letterSpacing": "-2%",
+        "source": "docs/CM_TypeHierarchy_II.png"
+      },
+      "headline3": {
+        "fontFamily": "Object Sans",
+        "fontWeight": "bold",
+        "fontSize": "80pt",
+        "letterSpacing": "-2%",
+        "source": "docs/CM_TypeHierarchy_II.png",
+        "note": "Source lists identical specs to headline2; rendered visibly smaller/heavier in the comp. Confirm."
+      },
+      "subhead1": {
+        "fontFamily": "Object Sans",
+        "fontWeight": "regular",
+        "fontSize": "40pt",
+        "letterSpacing": "-2%",
+        "source": "docs/CM_TypeHierarchy_II.png"
+      },
+      "subhead2": {
+        "fontFamily": "Object Sans",
+        "fontWeight": "regular",
+        "fontSize": "30pt",
+        "letterSpacing": "-2%",
+        "source": "docs/CM_TypeHierarchy_II.png"
+      },
+      "subhead3": {
+        "fontFamily": "Object Sans",
+        "fontWeight": "bold",
+        "fontSize": "30pt",
+        "letterSpacing": "+2%",
+        "source": "docs/CM_TypeHierarchy_II.png",
+        "note": "Source label reads 'Sans Reg, 30pt, 2% tracking' but renders bold. Confirm weight and tracking sign."
+      },
+      "cta": {
+        "fontFamily": "Object Sans",
+        "fontWeight": "regular",
+        "fontSize": null,
+        "letterSpacing": "-2%",
+        "source": "docs/CM_TypeHierarchy_II.png",
+        "note": "Size TBD in source. Rendered as an outlined pill button."
+      },
+      "bodyLarge": {
+        "fontFamily": "Object Sans",
+        "fontWeight": "regular",
+        "fontSize": "22pt",
+        "letterSpacing": "0%",
+        "source": "docs/CM_TypeHierarchy_II.png"
+      },
+      "bodySmall": {
+        "fontFamily": "Object Sans",
+        "fontWeight": "regular",
+        "fontSize": "18pt",
+        "letterSpacing": "0%",
+        "source": "docs/CM_TypeHierarchy_II.png"
+      }
+    },
+    "rules": [
+      "Use hierarchy intentionally to move information through the page.",
+      "Use Compacta for brief, impactful headlines rather than large blocks of copy.",
+      "Do not distort, outline, shadow, or over-tighten type.",
+      "Limit the number of font sizes on a single page; an exaggerated sense of scale gives impact, quieter work can be less extreme."
+    ],
+    "fontFiles": {
+      "note": "Web builds served by the guide site; licensed fonts, use only within licence. Official downloads are in Box (see downloads).",
+      "faces": [
+        {
+          "family": "Compacta STD",
+          "weight": 400,
+          "style": "normal",
+          "file": "https://brandguide.criticalmass.com/user/themes/learn2/fonts/compactastd.woff2"
+        },
+        {
+          "family": "Compacta STD",
+          "weight": 700,
+          "style": "normal",
+          "file": "https://brandguide.criticalmass.com/user/themes/learn2/fonts/compactablackposterw01.woff2"
+        },
+        {
+          "family": "Compacta STD",
+          "weight": 400,
+          "style": "italic",
+          "file": "https://brandguide.criticalmass.com/user/themes/learn2/fonts/compactaw01-light.woff2"
+        },
+        {
+          "family": "PP Object Sans",
+          "weight": 400,
+          "style": "normal",
+          "file": "https://brandguide.criticalmass.com/user/themes/learn2/fonts/ppobjectsans-regular-webfont.woff2"
+        },
+        {
+          "family": "PP Object Sans",
+          "weight": 700,
+          "style": "normal",
+          "file": "https://brandguide.criticalmass.com/user/themes/learn2/fonts/ppobjectsans-bold-webfont.woff2"
+        },
+        {
+          "family": "PP Object Sans",
+          "weight": 400,
+          "style": "italic",
+          "file": "https://brandguide.criticalmass.com/user/themes/learn2/fonts/ppobjectsans-slanted-webfont.woff2"
+        },
+        {
+          "family": "PP Object Sans",
+          "weight": 700,
+          "style": "italic",
+          "file": "https://brandguide.criticalmass.com/user/themes/learn2/fonts/ppobjectsans-boldslanted-webfont.woff2"
+        }
+      ]
+    }
+  },
+  "logos": {
+    "primary": {
+      "kind": "wordmark",
+      "asset": "https://cm.app.box.com/folder/169395490968",
+      "source": "https://brandguide.criticalmass.com/our-logos/primary.html",
+      "assetNote": "Box folder (SVG/wordmark files); guide shows raster previews only.",
+      "clearspace": "About one logo height (a C's worth) on all sides, uncropped.",
+      "minHeightPx": 20,
+      "color": "Only palette colors; ensure maximum contrast, especially over imagery."
+    },
+    "secondary": {
+      "kind": "monogram-and-dynamic-content-window",
+      "asset": "https://cm.app.box.com/folder/169396250009",
+      "source": "https://brandguide.criticalmass.com/our-logos/secondary.html"
+    },
+    "saltAndPepper": {
+      "kind": "brand-elements",
+      "asset": "https://cm.app.box.com/folder/169395664006",
+      "source": "https://brandguide.criticalmass.com/our-logos/salt-pepper.html"
+    }
+  },
+  "layout": {
+    "principles": [
+      "Tidy grids",
+      "Ample negative space",
+      "Modular hierarchy and scale",
+      "Intentional composition",
+      "Unexpected scale and mildly absurd ratios (Keep it Interesting)."
+    ],
+    "patterns": [
+      "Window",
+      "50/50",
+      "Full bleed copy",
+      "Full bleed imagery"
+    ],
+    "grid": {
+      "value": null,
+      "status": "not-specified",
+      "note": "Guide describes grids only qualitatively (tidy grids, modular scale, 'mildly absurd ratios'); no columns/gutters/margins published. Templates in Box hold the real layouts.",
+      "source": "https://brandguide.criticalmass.com/composition.html"
+    }
+  },
+  "imagery": {
+    "principles": [
+      "Prefer authentic imagery when possible.",
+      "Use approved or commercially cleared assets for public work.",
+      "Use strips and window-like crops with restraint.",
+      "Keep imagery intact and avoid unnecessary overlays."
+    ],
+    "categories": {
+      "status": "confirmed",
+      "items": [
+        {
+          "name": "Window (What's out your window?)",
+          "note": "CM-submitted photography; refresh about twice a year."
+        },
+        {
+          "name": "Nature",
+          "note": "Canadian heritage, warmth."
+        },
+        {
+          "name": "Brekkie",
+          "note": "Breakfast, especially pancakes; unmessy; reserved for levity about culture and people."
+        },
+        {
+          "name": "Textural",
+          "note": "Slightly abstract; avoid unnatural or over-rendered textures."
+        },
+        {
+          "name": "Portraiture",
+          "note": "Contact the Senior Art Curator for setups."
+        },
+        {
+          "name": "Case studies",
+          "note": "Asset library lives in Box."
+        }
+      ],
+      "source": "https://brandguide.criticalmass.com/imagery/by-subject.html"
+    },
+    "clearance": "Internal/pitch use of found imagery needs no clearance; public or client paid work needs commercial clearance from the OMC-approved vendor list; handed-off proof of concept needs a legal footer. Audit CMer content (logos, signs, faces) before public use."
+  },
+  "motion": {
+    "guidance": [
+      "The secondary mark is dynamic and can act as a content window.",
+      "Motion should support the content rather than become decoration."
+    ],
+    "tokens": {
+      "value": null,
+      "status": "not-specified",
+      "note": "Guide says Motion & Interaction is a work in progress. Only the brand reel and logo-build videos are published.",
+      "source": "https://brandguide.criticalmass.com/motion.html"
+    }
+  },
+  "voice": {
+    "traits": [
+      "Hospitable",
+      "Approachable",
+      "Playful",
+      "Canadian-rooted",
+      "Inclusive"
+    ],
+    "source": "https://brandguide.criticalmass.com/tone-of-voice/our-character.html",
+    "inclusiveWriting": "https://brandguide.criticalmass.com/tone-of-voice/inclusive-writing.html"
+  },
+  "downloads": {
+    "note": "All in Box (cm.app.box.com); links from the guide's Downloads page.",
+    "primaryType": "https://cm.app.box.com/folder/169396020631",
+    "supportingType": "https://cm.app.box.com/folder/169396602574",
+    "bothFonts": "https://cm.app.box.com/file/994686587136",
+    "keynoteTemplate": "https://cm.app.box.com/file/1062128393778",
+    "keynoteTheme": "https://cm.app.box.com/file/1086901731477",
+    "wordTemplate": "https://cm.app.box.com/file/1240641341751",
+    "source": "https://brandguide.criticalmass.com/downloads.html"
+  }
+}
