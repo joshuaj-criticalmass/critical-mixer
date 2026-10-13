@@ -10,3 +10,8 @@ item should be committed and pushed separately.
   supporting identification assets.
 - Added the build checklist and the per-item changelog, commit, and push
   workflow.
+
+- Completed TODO: prepared a secret-free environment template using
+  ScoopShare-compatible Upstash variable names, added ignore rules for local
+  environment and Vercel files, and documented setup prerequisites. No Redis
+  data was changed.

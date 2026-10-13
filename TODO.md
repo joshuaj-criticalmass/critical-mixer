@@ -5,7 +5,8 @@ update `changelog.md`, then commit and push that item before moving on. See
 the delivery workflow in [Critical-Mixer-BUILD-SPEC.md](Critical-Mixer-BUILD-SPEC.md#progress-tracking--delivery).
 
 - [x] Align the build spec with the CM token system and establish progress tracking.
-- [ ] Prepare the app, Vercel and Upstash configuration; retire ScoopShare and reconnect Redis as specified.
+- [x] Prepare the local environment template, ignore rules, and setup notes.
+- [ ] Provision the Vercel project and connect Upstash; decide how to retire ScoopShare and authorize/export data before any Redis wipe.
 - [ ] Bootstrap the Next.js App Router project, shared token theme, Redis client, and core utilities.
 - [ ] Implement player join, session handling, recovery codes, and account recovery.
 - [ ] Implement rotating player QR codes and lobby/active game-state behavior.
