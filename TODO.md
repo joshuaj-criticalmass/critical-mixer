@@ -7,7 +7,10 @@ the delivery workflow in [Critical-Mixer-BUILD-SPEC.md](Critical-Mixer-BUILD-SPE
 - [x] Align the build spec with the CM token system and establish progress tracking.
 - [x] Prepare the local environment template, ignore rules, and setup notes.
 - [x] Bootstrap the Next.js App Router project, shared token theme, Redis client, and core utilities.
-- [ ] Provision the Vercel project and connect Upstash; pending project-creation access from the Work team owner. Decide how to retire ScoopShare and authorize/export data before any Redis wipe.
+- [x] Create and locally link a separate Critical Mixer project in the personal Vercel workspace.
+- [ ] Connect the Vercel project to `joshuaj-criticalmass/critical-mixer`; Vercel's GitHub integration needs repository access.
+- [ ] Connect the existing Upstash database and configure production/preview environment variables.
+- [ ] Decide what ScoopShare data to export and get explicit approval before any Redis wipe.
 - [x] Implement player join, session handling, recovery codes, and account recovery.
 - [ ] Implement rotating player QR codes and lobby/active game-state behavior.
 - [ ] Implement scan validation, pending scan-backs, confirmation, scoring, and icebreakers.

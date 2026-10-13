@@ -25,6 +25,8 @@ item should be committed and pushed separately.
   sessions, unique recovery codes, recovery-attempt rate limiting, and the join,
   recovery, and initial signed-in screens. Identity tests, lint, build, and
   audit pass. Redis-backed round-trip testing awaits configured credentials.
-- Blocker: the authenticated Vercel account can view the company Work team but
-  cannot create projects there. No Vercel project was created, and no Redis
-  database or ScoopShare data was changed.
+- Completed TODO: created a separate `critical-mixer` Vercel project in the
+  personal workspace and linked this local checkout.
+- Blocker: Vercel's GitHub integration cannot yet access
+  `joshuaj-criticalmass/critical-mixer`. No Redis database or ScoopShare data
+  was changed.
