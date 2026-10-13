@@ -20,3 +20,11 @@ item should be committed and pushed separately.
   ScoopShare-compatible Redis client. Updated to supported Next.js 16, React
   19, and Tailwind 4 releases; lint and production build pass, and `npm audit`
   reports no vulnerabilities.
+
+- Completed TODO: implemented player join and recovery routes, signed local
+  sessions, unique recovery codes, recovery-attempt rate limiting, and the join,
+  recovery, and initial signed-in screens. Identity tests, lint, build, and
+  audit pass. Redis-backed round-trip testing awaits configured credentials.
+- Blocker: the authenticated Vercel account can view the company Work team but
+  cannot create projects there. No Vercel project was created, and no Redis
+  database or ScoopShare data was changed.

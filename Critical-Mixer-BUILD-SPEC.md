@@ -83,8 +83,8 @@ ScoopShare's.
 - Fields: **Name** (free text, 1–40 chars, trimmed) and **Company**
   (a segmented control or dropdown: Critical Mass, artbot., Tribal, RAPP).
 - A "Join" button, plus a secondary link: "Already playing? Log back in".
-- One line of privacy copy: *"We only store your name and company, and
-  everything is deleted after the game."*
+- One line of privacy copy: *"We use your name, company and game activity to
+  run Critical Mixer, and delete your stored data after the event."*
 - On success, show the **recovery code screen** (4.2) once.
 
 ### 4.2 Recovery code — shown once after joining

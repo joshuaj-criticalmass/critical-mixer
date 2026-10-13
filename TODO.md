@@ -7,8 +7,8 @@ the delivery workflow in [Critical-Mixer-BUILD-SPEC.md](Critical-Mixer-BUILD-SPE
 - [x] Align the build spec with the CM token system and establish progress tracking.
 - [x] Prepare the local environment template, ignore rules, and setup notes.
 - [x] Bootstrap the Next.js App Router project, shared token theme, Redis client, and core utilities.
-- [ ] Provision the Vercel project and connect Upstash; decide how to retire ScoopShare and authorize/export data before any Redis wipe.
-- [ ] Implement player join, session handling, recovery codes, and account recovery.
+- [ ] Provision the Vercel project and connect Upstash; pending project-creation access from the Work team owner. Decide how to retire ScoopShare and authorize/export data before any Redis wipe.
+- [x] Implement player join, session handling, recovery codes, and account recovery.
 - [ ] Implement rotating player QR codes and lobby/active game-state behavior.
 - [ ] Implement scan validation, pending scan-backs, confirmation, scoring, and icebreakers.
 - [ ] Implement the native-camera QR fallback and in-app-browser guidance.

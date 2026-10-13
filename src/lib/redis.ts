@@ -5,10 +5,14 @@ const url =
 const token =
   process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN ?? "";
 
-if (!url || !token) {
-  console.warn(
-    "[redis] Missing Redis REST credentials. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN."
-  );
-}
+export const redisConfigured = Boolean(url && token);
+let client: Redis | undefined;
 
-export const redis = new Redis({ url, token });
+export function getRedis(): Redis {
+  if (!redisConfigured) {
+    throw new Error("Missing Upstash Redis REST credentials.");
+  }
+
+  client ??= new Redis({ url, token });
+  return client;
+}
