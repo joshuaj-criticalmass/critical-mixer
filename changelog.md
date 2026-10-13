@@ -27,6 +27,8 @@ item should be committed and pushed separately.
   audit pass. Redis-backed round-trip testing awaits configured credentials.
 - Completed TODO: created a separate `critical-mixer` Vercel project in the
   personal workspace and linked this local checkout.
-- Blocker: Vercel's GitHub integration cannot yet access
-  `joshuaj-criticalmass/critical-mixer`. No Redis database or ScoopShare data
-  was changed.
+- Completed TODO: connected ScoopShare's existing `scoopshare-kv` Upstash
+  resource to Critical Mixer for Production, Preview, and Development. Added
+  fresh QR/admin secrets without exposing their values. No Redis keys or
+  ScoopShare data were changed.
+- Note: automatic GitHub deployments remain optional and unavailable.
