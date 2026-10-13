@@ -15,3 +15,8 @@ item should be committed and pushed separately.
   ScoopShare-compatible Upstash variable names, added ignore rules for local
   environment and Vercel files, and documented setup prerequisites. No Redis
   data was changed.
+
+- Completed TODO: bootstrapped the Next.js App Router, CM token theme, and
+  ScoopShare-compatible Redis client. Updated to supported Next.js 16, React
+  19, and Tailwind 4 releases; lint and production build pass, and `npm audit`
+  reports no vulnerabilities.

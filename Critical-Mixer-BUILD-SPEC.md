@@ -35,7 +35,9 @@ revealed on a "Wrapped"-style big-screen page.
 
 ## 2. Tech Stack
 
-Match ScoopShare's setup wherever possible.
+Match ScoopShare's setup wherever possible, but use supported, patched
+dependency releases instead of inheriting vulnerable versions. The starter is
+bootstrapped with Next.js 16.4, React 19.3, and Tailwind 4.3.
 
 | Layer | Choice |
 |---|---|

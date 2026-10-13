@@ -6,13 +6,11 @@ stores game state in Upstash Redis under the `cmx:` key prefix.
 
 ## Local setup
 
-The application scaffold is the next build task. Once it is in place:
-
 1. Install dependencies with `npm install`.
 2. Copy `.env.example` to `.env.local` and provide the Upstash REST URL and
    token, plus independent long random values for `QR_SECRET` and
    `ADMIN_SECRET`.
-3. Run the app with `npm run dev`.
+3. Run the app with `npm run dev` at [http://localhost:3000](http://localhost:3000).
 
 Never commit `.env.local`, production secrets, or `.vercel` project metadata.
 The variable names match ScoopShare's existing Upstash setup; its Redis

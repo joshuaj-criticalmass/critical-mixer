@@ -1,0 +1,122 @@
+@import "tailwindcss";
+@import "../../styles/tokens.css";
+
+@theme inline {
+  --color-cm-rorange: var(--color-brand-rorange);
+  --color-cm-pinkish: var(--color-brand-pinkish);
+  --color-cm-white: var(--color-brand-white);
+  --color-cm-black: var(--color-brand-black);
+  --color-cm-eggshell: var(--color-brand-eggshell);
+  --color-cm-calgary-blue: var(--color-brand-calgary-blue);
+  --color-cm-sky-blue: var(--color-brand-sky-blue);
+  --color-cm-bg: var(--color-bg);
+  --color-cm-surface: var(--color-surface);
+  --color-cm-text: var(--color-text);
+  --color-cm-primary: var(--color-primary);
+  --font-cm-body: var(--font-body), sans-serif;
+  --font-cm-display: var(--font-display), sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body), sans-serif;
+}
+
+.page-shell {
+  display: grid;
+  min-height: 100vh;
+  grid-template-rows: auto 1fr auto;
+  padding: 2rem;
+}
+
+.wordmark,
+.page-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(100%, 80rem);
+  margin-inline: auto;
+}
+
+.wordmark {
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--color-brand-black);
+  padding-bottom: 1rem;
+  font-weight: 700;
+}
+
+.brand-mark {
+  display: grid;
+  width: 2.5rem;
+  aspect-ratio: 1;
+  place-items: center;
+  background: var(--color-brand-rorange);
+  color: var(--color-brand-white);
+  font-size: 0.875rem;
+}
+
+.intro {
+  display: grid;
+  width: min(100%, 80rem);
+  align-content: center;
+  margin-inline: auto;
+  padding-block: 5rem;
+}
+
+.eyebrow {
+  margin: 0 0 1.5rem;
+  color: var(--color-brand-calgary-blue);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.intro h1 {
+  max-width: 10ch;
+  margin: 0;
+  font-family: var(--font-display), sans-serif;
+  font-size: 6rem;
+  font-weight: 400;
+  line-height: 0.9;
+}
+
+.intro-copy {
+  max-width: 35rem;
+  margin: 2rem 0 0;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.page-footer {
+  border-top: 1px solid var(--color-brand-black);
+  padding-top: 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 600px) {
+  .page-shell {
+    padding: 1.25rem;
+  }
+
+  .intro h1 {
+    font-size: 4rem;
+  }
+
+  .page-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+}

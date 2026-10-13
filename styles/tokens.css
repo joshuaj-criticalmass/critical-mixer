@@ -1,0 +1,21 @@
+:root {
+  --color-brand-rorange: #F24711;
+  --color-brand-pinkish: #FFE7DE;
+  --color-brand-white: #FFFFFF;
+  --color-brand-black: #000000;
+  --color-brand-eggshell: #F7FAF2;
+  --color-brand-calgary-blue: #0C47C7;
+  --color-brand-sky-blue: #D6E6F8;
+
+  --color-bg: var(--color-brand-eggshell);
+  --color-surface: var(--color-brand-white);
+  --color-text: var(--color-brand-black);
+  --color-text-muted: var(--color-brand-calgary-blue);
+  --color-primary: var(--color-brand-rorange);
+  --color-accent: var(--color-brand-calgary-blue);
+  --color-danger: var(--color-brand-rorange);
+
+  --font-body: "PP Object Sans";
+  --font-display: "Compacta STD";
+  --radius: 4px;
+}
