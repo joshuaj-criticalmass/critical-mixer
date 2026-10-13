@@ -1,9 +1,10 @@
 import { randomInt } from "node:crypto";
 import { customAlphabet } from "nanoid";
+import { companies, type Company } from "./companies.ts";
 import { recoveryWords } from "./recovery-words.ts";
 
-export const companies = ["Critical Mass", "artbot.", "Tribal", "RAPP"] as const;
-export type Company = (typeof companies)[number];
+export { companies };
+export type { Company };
 
 const playerId = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
@@ -62,6 +63,21 @@ export async function hmacBase64Url(secret: string, message: string): Promise<st
   );
   const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(message));
   return Buffer.from(signature).toString("base64url");
+}
+
+export async function verifySessionSignature(
+  playerId: string,
+  suppliedSignature: string,
+  secret: string
+): Promise<boolean> {
+  const expectedSignature = await hmacBase64Url(secret, `${playerId}:session`);
+  if (expectedSignature.length !== suppliedSignature.length) return false;
+
+  let mismatch = 0;
+  for (let index = 0; index < expectedSignature.length; index += 1) {
+    mismatch |= expectedSignature.charCodeAt(index) ^ suppliedSignature.charCodeAt(index);
+  }
+  return mismatch === 0;
 }
 
 export async function createPlayerSession(

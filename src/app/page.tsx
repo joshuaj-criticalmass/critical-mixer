@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
-import { companies, type Company, type PlayerSession } from "@/lib/identity";
+import { companies, type Company } from "@/lib/companies";
+import type { PlayerSession } from "@/lib/identity";
 
 type ApiResponse = {
   session?: PlayerSession;

@@ -13,7 +13,7 @@ the delivery workflow in [Critical-Mixer-BUILD-SPEC.md](Critical-Mixer-BUILD-SPE
 - [ ] Connect the Vercel project to `joshuaj-criticalmass/critical-mixer` for automatic deployments, if the Vercel GitHub integration issue is resolved.
 - [ ] Decide what ScoopShare data to export and get explicit approval before any Redis wipe.
 - [x] Implement player join, session handling, recovery codes, and account recovery.
-- [ ] Implement rotating player QR codes and lobby/active game-state behavior.
+- [x] Implement rotating player QR codes with server-time correction, lobby gating, and a 30-second refresh indicator.
 - [ ] Implement scan validation, pending scan-backs, confirmation, scoring, and icebreakers.
 - [ ] Implement the native-camera QR fallback and in-app-browser guidance.
 - [ ] Implement player home, visible-tab polling, leaderboard tiers, and met-player history.

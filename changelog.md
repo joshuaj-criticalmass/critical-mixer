@@ -37,3 +37,7 @@ item should be committed and pushed separately.
   https://critical-mixer-pv6vkeebt-joshuabrainjaffe.vercel.app
 - The Preview is protected by Vercel Authentication. No Production deployment
   was made.
+- Completed TODO: added an authenticated game-status/server-time endpoint and
+  client-side QR signing/rotation. Tokens remain stable for 30 seconds, validate
+  across the current and adjacent windows, and are visibly inactive outside the
+  active game. Nine identity/QR tests, lint, and production build pass.

@@ -235,8 +235,93 @@ body {
   line-height: 1;
 }
 
-.play-intro {
-  gap: 1.5rem;
+.play-layout {
+  display: grid;
+  width: min(100%, 80rem);
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 22rem);
+  align-items: center;
+  gap: clamp(2rem, 8vw, 7rem);
+  margin-inline: auto;
+  padding-block: 3rem;
+}
+
+.play-copy {
+  display: grid;
+  align-content: center;
+  gap: 1rem;
+}
+
+.play-copy h1 {
+  max-width: 12ch;
+  margin: 0;
+  font-family: var(--font-display), sans-serif;
+  font-size: 4.5rem;
+  font-weight: 400;
+  line-height: 0.95;
+}
+
+.play-copy .intro-copy {
+  margin: 0;
+}
+
+.qr-panel {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+}
+
+.qr-ring {
+  display: grid;
+  width: min(100%, 22rem);
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 50%;
+  padding: 0.55rem;
+}
+
+.qr-frame {
+  position: relative;
+  display: grid;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  place-items: center;
+  border: 1px solid var(--color-brand-black);
+  background: var(--color-brand-white);
+}
+
+.qr-frame-inactive .qr-image {
+  opacity: 0.3;
+}
+
+.qr-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.qr-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: color-mix(in srgb, var(--color-brand-eggshell) 76%, transparent);
+  color: var(--color-text);
+  font-weight: 700;
+  text-align: center;
+}
+
+.qr-placeholder {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.qr-timer {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
 }
 
 .recovery-details {
@@ -271,6 +356,20 @@ body {
     grid-template-columns: minmax(0, 1fr);
     gap: 2rem;
     padding-block: 3rem;
+  }
+
+  .play-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+    padding-block: 2rem;
+  }
+
+  .play-copy h1 {
+    font-size: 3.5rem;
+  }
+
+  .qr-ring {
+    width: min(100%, 19rem);
   }
 
   .recovery-code {
