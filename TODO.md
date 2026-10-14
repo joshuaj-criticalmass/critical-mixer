@@ -17,7 +17,7 @@ the delivery workflow in [Critical-Mixer-BUILD-SPEC.md](Critical-Mixer-BUILD-SPE
 - [x] Implement rotating player QR codes with server-time correction, lobby gating, and a 30-second refresh indicator.
 - [x] Implement in-app QR scanning, pending scan-backs, atomic one-point confirmation, and shared icebreakers.
 - [x] Implement the native-camera QR fallback with token-preserving Join/Recover handoff.
-- [ ] Implement player home, visible-tab polling, leaderboard tiers, and met-player history.
+- [x] Implement player home, visible-tab polling, pending scan-backs, leaderboard tiers, and lazy met-player history.
 - [ ] Implement admin controls, overview, player search, recovery QR, and data wipe.
 - [ ] Implement the ended-game results view for players.
 - [ ] Implement wrapped-stat aggregation and the host-paced reveal presentation.

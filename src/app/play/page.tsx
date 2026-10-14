@@ -13,6 +13,11 @@ import {
 } from "@/lib/rotating-qr";
 
 type GameStatus = "loading" | "unavailable" | "lobby" | "active" | "ended";
+type PlayerTotals = { points: number; meetCount: number };
+type LeaderboardTier = { points: number; count: number };
+type PendingScan = { id: string; name: string; scannedAt: number };
+type MetPerson = { id: string; name: string; metAt: number };
+const POLL_MS = 30_000;
 
 export default function PlayPage() {
   const router = useRouter();
@@ -21,6 +26,13 @@ export default function PlayPage() {
   const [serverOffset, setServerOffset] = useState(0);
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [qrImage, setQrImage] = useState("");
+  const [playerTotals, setPlayerTotals] = useState<PlayerTotals>({ points: 0, meetCount: 0 });
+  const [top3, setTop3] = useState<LeaderboardTier[]>([]);
+  const [pendingScans, setPendingScans] = useState<PendingScan[]>([]);
+  const [metPeople, setMetPeople] = useState<MetPerson[]>([]);
+  const [metLoaded, setMetLoaded] = useState(false);
+  const [metLoading, setMetLoading] = useState(false);
+  const [metError, setMetError] = useState("");
 
   useEffect(() => {
     const stored = localStorage.getItem("cmx:session");
@@ -39,10 +51,13 @@ export default function PlayPage() {
 
   useEffect(() => {
     if (!session) return;
-    const controller = new AbortController();
-    const requestStartedAt = Date.now();
+    let isMounted = true;
+    let isPolling = false;
 
-    async function loadGameStatus() {
+    async function pollPlayerState() {
+      if (!isMounted || document.visibilityState !== "visible" || isPolling) return;
+      isPolling = true;
+      const requestStartedAt = Date.now();
       try {
         const response = await fetch("/api/me", {
           headers: {
@@ -50,26 +65,43 @@ export default function PlayPage() {
             "x-session-sig": session!.sessionSig,
           },
           cache: "no-store",
-          signal: controller.signal,
         });
         if (!response.ok) throw new Error("Game status unavailable");
 
         const result = (await response.json()) as {
           serverTime: number;
           status: Exclude<GameStatus, "loading" | "unavailable">;
+          me: PlayerTotals;
+          top3: LeaderboardTier[];
+          pending: PendingScan[];
         };
         const requestFinishedAt = Date.now();
-        setServerOffset(
-          result.serverTime - (requestStartedAt + requestFinishedAt) / 2
-        );
-        setGameStatus(result.status);
+        if (isMounted) {
+          setServerOffset(result.serverTime - (requestStartedAt + requestFinishedAt) / 2);
+          setGameStatus(result.status);
+          setPlayerTotals(result.me);
+          setTop3(result.top3);
+          setPendingScans(result.pending);
+        }
       } catch {
-        if (!controller.signal.aborted) setGameStatus("unavailable");
+        if (isMounted) setGameStatus("unavailable");
+      } finally {
+        isPolling = false;
       }
     }
 
-    void loadGameStatus();
-    return () => controller.abort();
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") void pollPlayerState();
+    };
+    void pollPlayerState();
+    const interval = window.setInterval(() => void pollPlayerState(), POLL_MS);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      isMounted = false;
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
   }, [session]);
 
   useEffect(() => {
@@ -122,18 +154,46 @@ export default function PlayPage() {
         ? "Game setup is in progress."
         : "Game starts soon.";
 
+  async function loadMetHistory(): Promise<void> {
+    if (!session || metLoaded || metLoading) return;
+    setMetLoading(true);
+    setMetError("");
+    try {
+      const response = await fetch("/api/met", {
+        headers: {
+          "x-player-id": session.playerId,
+          "x-session-sig": session.sessionSig,
+        },
+        cache: "no-store",
+      });
+      if (!response.ok) throw new Error("People list unavailable");
+      const result = (await response.json()) as { people: MetPerson[] };
+      setMetPeople(result.people);
+      setMetLoaded(true);
+    } catch {
+      setMetError("Couldn't load your list. Open this section to try again.");
+    } finally {
+      setMetLoading(false);
+    }
+  }
+
+  const thirdTier = top3[2];
+  const pointsToTop3 = thirdTier && playerTotals.points < thirdTier.points
+    ? thirdTier.points - playerTotals.points + 1
+    : 0;
+
   return (
     <main className="page-shell">
       <header className="wordmark">
         <span className="brand-mark" aria-hidden="true">CM</span>
         <span>Critical Mixer</span>
       </header>
-      <section className="play-layout" aria-live="polite">
+      <section className="play-layout">
         {session && (
           <>
             <div className="play-copy">
               <h1>You're in, {session.name}.</h1>
-              <p className="intro-copy">{statusMessage}</p>
+              <p className="intro-copy" aria-live="polite">{statusMessage}</p>
               {gameStatus === "active" ? (
                 <Link className="primary-button scan-link" href="/scan">
                   Scan someone <span aria-hidden="true">→</span>
@@ -166,6 +226,82 @@ export default function PlayPage() {
                 Refreshes in {remainingSeconds}s
               </p>
             </div>
+            <section className="home-data-grid" aria-label="Your game progress">
+              <section className="home-group" aria-labelledby="score-heading">
+                <h2 id="score-heading">Your score</h2>
+                <p className="score-total">{playerTotals.points}</p>
+                <p>{playerTotals.meetCount} people met</p>
+              </section>
+
+              <section className="home-group" aria-labelledby="pending-heading" aria-live="polite">
+                <h2 id="pending-heading">Scan-backs</h2>
+                {pendingScans.length === 0 ? (
+                  <p className="home-muted">No one is waiting for a scan-back.</p>
+                ) : (
+                  <ul className="pending-list">
+                    {pendingScans.map((pending) => {
+                      const secondsLeft = Math.max(
+                        0,
+                        Math.ceil((pending.scannedAt + 10 * 60 * 1000 - adjustedTime) / 1000)
+                      );
+                      return (
+                        <li key={pending.id} className="pending-item">
+                          <span>{pending.name} scanned you</span>
+                          <span>Scan back to confirm · {Math.floor(secondsLeft / 60)}:{String(secondsLeft % 60).padStart(2, "0")} left</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </section>
+
+              <section className="home-group" aria-labelledby="leaderboard-heading">
+                <h2 id="leaderboard-heading">Top 3 tiers</h2>
+                {top3.length === 0 ? (
+                  <p className="home-muted">Leaderboard appears when scores are in.</p>
+                ) : (
+                  <ol className="leaderboard-list">
+                    {top3.map((tier, index) => (
+                      <li className="leaderboard-item" key={tier.points}>
+                        <span>{index + 1}{index === 0 ? "st" : index === 1 ? "nd" : "rd"}</span>
+                        <span>{tier.count} {tier.count === 1 ? "player" : "players"}</span>
+                        <strong>{tier.points} pts</strong>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+                {pointsToTop3 > 0 && top3.length === 3 && (
+                  <p className="leaderboard-nudge">{pointsToTop3} more {pointsToTop3 === 1 ? "point" : "points"} to reach the top 3</p>
+                )}
+              </section>
+
+              <details className="home-group met-group" onToggle={(event) => {
+                if (event.currentTarget.open) void loadMetHistory();
+              }}>
+                <summary>People you've met</summary>
+                {metLoading && <p className="home-muted">Loading…</p>}
+                {metError && <p className="error-message" role="alert">{metError}</p>}
+                {metLoaded && metPeople.length === 0 && (
+                  <p className="home-muted">Your list will grow after your first meet.</p>
+                )}
+                {metPeople.length > 0 && (
+                  <ul className="met-list">
+                    {metPeople.map((person) => (
+                      <li key={person.id}>
+                        <span>{person.name}</span>
+                        <time dateTime={new Date(person.metAt).toISOString()}>
+                          {new Date(person.metAt).toLocaleString("en-GB", {
+                            weekday: "short",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </time>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </details>
+            </section>
           </>
         )}
       </section>

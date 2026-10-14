@@ -264,6 +264,101 @@ body {
   margin: 0;
 }
 
+.home-data-grid {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 3rem;
+  border-top: 1px solid var(--color-brand-black);
+  padding-top: 1.5rem;
+}
+
+.home-group {
+  min-width: 0;
+  border-top: 1px solid color-mix(in srgb, var(--color-brand-black) 38%, transparent);
+  padding-top: 0.9rem;
+}
+
+.home-group h2,
+.met-group summary {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.score-total {
+  margin: 0.35rem 0 0;
+  color: var(--color-primary);
+  font-family: var(--font-display), sans-serif;
+  font-size: 3.25rem;
+  line-height: 1;
+}
+
+.home-group > p:not(.score-total) {
+  margin: 0.45rem 0 0;
+}
+
+.home-muted {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.pending-list,
+.leaderboard-list,
+.met-list {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pending-item {
+  display: grid;
+  gap: 0.25rem;
+  border-left: 3px solid var(--color-primary);
+  padding: 0.25rem 0 0.25rem 0.75rem;
+}
+
+.pending-item span:first-child {
+  font-weight: 700;
+}
+
+.pending-item span:last-child,
+.met-list time {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.leaderboard-item {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.leaderboard-item strong {
+  white-space: nowrap;
+}
+
+.leaderboard-nudge {
+  color: var(--color-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.met-group summary {
+  cursor: pointer;
+}
+
+.met-list li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.35rem 1rem;
+}
+
 .qr-panel {
   display: grid;
   justify-items: center;
@@ -498,6 +593,11 @@ body {
     grid-template-columns: minmax(0, 1fr);
     gap: 2rem;
     padding-block: 2rem;
+  }
+
+  .home-data-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
   }
 
   .play-copy h1 {

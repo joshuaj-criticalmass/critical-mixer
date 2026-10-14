@@ -1,9 +1,13 @@
 import { verifySessionSignature } from "@/lib/identity";
 import { getRedis, redisConfigured } from "@/lib/redis";
+import { normalizeStoredPlayerName, parseScoredMembers, readHashField } from "@/lib/redis-shapes";
 
 export const runtime = "nodejs";
 
 type GameStatus = "lobby" | "active" | "ended";
+type LeaderboardTier = { points: number; count: number };
+type PublicState = { status?: string; top3?: LeaderboardTier[] };
+const PENDING_WINDOW_MS = 10 * 60 * 1000;
 
 function json(body: unknown, status: number): Response {
   return Response.json(body, {
@@ -30,15 +34,59 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   try {
-    const publicState = await getRedis().get<{ status?: string }>("cmx:public");
-    const rawStatus = publicState && typeof publicState === "object"
-      ? publicState.status
-      : undefined;
+    const redis = getRedis();
+    const now = Date.now();
+    const playerKey = `cmx:player:${playerId}`;
+    const pendingKey = `cmx:pending:${playerId}`;
+    const [publicValue, playerValues, pendingValues] = await redis
+      .pipeline()
+      .get<PublicState>("cmx:public")
+      .hmget<Record<string, unknown>>(playerKey, "points", "meetCount")
+      .zrange<(string | number | { member: string; score: number })[]>(
+        pendingKey,
+        `(${now - PENDING_WINDOW_MS}`,
+        "+inf",
+        { byScore: true, withScores: true }
+      )
+      .exec();
+
+    const publicState = typeof publicValue === "string"
+      ? (JSON.parse(publicValue) as PublicState)
+      : publicValue;
+    const rawStatus = publicState?.status;
     const status: GameStatus = rawStatus === "active" || rawStatus === "ended"
       ? rawStatus
       : "lobby";
+    const pendingIds = parseScoredMembers(pendingValues);
+    let pending: { id: string; name: string; scannedAt: number }[] = [];
 
-    return json({ serverTime: Date.now(), status }, 200);
+    if (pendingIds.length > 0) {
+      const pendingNames = await redis.hmget<Record<string, unknown>>(
+        "cmx:names",
+        ...pendingIds.map(({ member }) => member)
+      );
+      pending = pendingIds.flatMap(({ member, score }, index) => {
+        const name = normalizeStoredPlayerName(
+          readHashField(pendingNames, member, index)
+        );
+        return name ? [{ id: member, name, scannedAt: score }] : [];
+      });
+    }
+
+    const top3 = Array.isArray(publicState?.top3)
+      ? publicState.top3.filter((tier) => Number.isFinite(tier.points) && Number.isFinite(tier.count))
+      : [];
+
+    return json({
+      serverTime: now,
+      status,
+      me: {
+        points: Number(readHashField(playerValues, "points", 0) ?? 0),
+        meetCount: Number(readHashField(playerValues, "meetCount", 1) ?? 0),
+      },
+      top3,
+      pending,
+    }, 200);
   } catch {
     return json({ error: "The game is temporarily unavailable. Please try again." }, 503);
   }

@@ -54,3 +54,7 @@ item should be committed and pushed separately.
 - Completed TODO: added the native-camera `/m/[token]` fallback. Signed-in
   players auto-submit the scan, while Join and Recover links preserve the
   scanned token and resume it after authentication. No Redis data was written.
+- Completed TODO: expanded `/api/me` to return player totals, leaderboard
+  tiers, and pending scan-backs on visible-tab polling; added lazy `/api/met`
+  history and the player home progress sections. Redis response parsing tests,
+  lint, build, and all thirteen tests pass. No live player data was changed.
