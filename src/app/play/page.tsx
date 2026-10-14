@@ -14,7 +14,12 @@ import {
 
 type GameStatus = "loading" | "unavailable" | "lobby" | "active" | "ended";
 type PlayerTotals = { points: number; meetCount: number };
-type LeaderboardTier = { points: number; count: number };
+type LeaderboardTier = {
+  points: number;
+  count: number;
+  players?: { id: string; name: string }[];
+};
+type Winner = { name: string; points: number };
 type PendingScan = { id: string; name: string; scannedAt: number };
 type MetPerson = { id: string; name: string; metAt: number };
 const POLL_MS = 30_000;
@@ -28,6 +33,7 @@ export default function PlayPage() {
   const [qrImage, setQrImage] = useState("");
   const [playerTotals, setPlayerTotals] = useState<PlayerTotals>({ points: 0, meetCount: 0 });
   const [top3, setTop3] = useState<LeaderboardTier[]>([]);
+  const [winners, setWinners] = useState<Winner[]>([]);
   const [pendingScans, setPendingScans] = useState<PendingScan[]>([]);
   const [metPeople, setMetPeople] = useState<MetPerson[]>([]);
   const [metLoaded, setMetLoaded] = useState(false);
@@ -74,6 +80,7 @@ export default function PlayPage() {
           me: PlayerTotals;
           top3: LeaderboardTier[];
           pending: PendingScan[];
+          winners?: Winner[];
         };
         const requestFinishedAt = Date.now();
         if (isMounted) {
@@ -82,6 +89,7 @@ export default function PlayPage() {
           setPlayerTotals(result.me);
           setTop3(result.top3);
           setPendingScans(result.pending);
+          setWinners(result.status === "ended" ? result.winners ?? [] : []);
         }
       } catch {
         if (isMounted) setGameStatus("unavailable");
@@ -191,6 +199,46 @@ export default function PlayPage() {
       <section className="play-layout">
         {session && (
           <>
+            {gameStatus === "ended" ? (
+              <section className="results-layout" aria-live="polite">
+                <div className="results-heading">
+                  <p className="eyebrow">London · 3-5 November 2026</p>
+                  <h1>That's a wrap!</h1>
+                  <p className="intro-copy">
+                    {winners.length === 1 ? "Our top scorer" : `It's a tie · ${winners.length} winners`}
+                  </p>
+                </div>
+                <div className="results-winners">
+                  {winners.map((winner, index) => (
+                    <div className="winner-row" key={`${winner.name}-${index}`}>
+                      <strong>{winner.name}</strong>
+                      <span>{winner.points} pts</span>
+                    </div>
+                  ))}
+                  {winners.length === 0 && <p className="home-muted">Results are not available yet.</p>}
+                </div>
+                <div className="results-details">
+                  <section className="home-group" aria-labelledby="final-tiers-heading">
+                    <h2 id="final-tiers-heading">Top score tiers</h2>
+                    <ol className="leaderboard-list">
+                      {top3.map((tier, index) => (
+                        <li className="leaderboard-item leaderboard-final-tier" key={tier.points}>
+                          <span>{index + 1}{index === 0 ? "st" : index === 1 ? "nd" : "rd"}</span>
+                          <strong>{tier.points} pts</strong>
+                          <span>{tier.players?.map((player) => player.name).join(", ")}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+                  <section className="home-group" aria-labelledby="final-stats-heading">
+                    <h2 id="final-stats-heading">Your final stats</h2>
+                    <p className="score-total">{playerTotals.points}</p>
+                    <p>{playerTotals.meetCount} people met</p>
+                  </section>
+                </div>
+              </section>
+            ) : (
+              <>
             <div className="play-copy">
               <h1>You're in, {session.name}.</h1>
               <p className="intro-copy" aria-live="polite">{statusMessage}</p>
@@ -302,6 +350,8 @@ export default function PlayPage() {
                 )}
               </details>
             </section>
+              </>
+            )}
           </>
         )}
       </section>

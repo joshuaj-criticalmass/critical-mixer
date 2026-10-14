@@ -1,11 +1,12 @@
 import { verifySessionSignature } from "@/lib/identity";
+import { buildRevealedLeaderboard } from "@/lib/leaderboard";
 import { getRedis, redisConfigured } from "@/lib/redis";
 import { normalizeStoredPlayerName, parseScoredMembers, readHashField } from "@/lib/redis-shapes";
 
 export const runtime = "nodejs";
 
 type GameStatus = "lobby" | "active" | "ended";
-type LeaderboardTier = { points: number; count: number };
+type LeaderboardTier = { points: number; count: number; players?: { id: string; name: string }[] };
 type PublicState = { status?: string; top3?: LeaderboardTier[] };
 const PENDING_WINDOW_MS = 10 * 60 * 1000;
 
@@ -73,9 +74,26 @@ export async function GET(request: Request): Promise<Response> {
       });
     }
 
-    const top3 = Array.isArray(publicState?.top3)
+    let top3: LeaderboardTier[] = Array.isArray(publicState?.top3)
       ? publicState.top3.filter((tier) => Number.isFinite(tier.points) && Number.isFinite(tier.count))
       : [];
+    let winners: { name: string; points: number }[] | undefined;
+
+    if (status === "ended") {
+      const [scores, names] = await redis
+        .pipeline()
+        .zrange<(string | number | { member: string; score: number })[]>(
+          "cmx:scores",
+          0,
+          -1,
+          { rev: true, withScores: true }
+        )
+        .hgetall<Record<string, string>>("cmx:names")
+        .exec();
+      const revealed = buildRevealedLeaderboard(parseScoredMembers(scores), names ?? {});
+      top3 = revealed.top3;
+      winners = revealed.winners;
+    }
 
     return json({
       serverTime: now,
@@ -86,6 +104,7 @@ export async function GET(request: Request): Promise<Response> {
       },
       top3,
       pending,
+      ...(winners ? { winners } : {}),
     }, 200);
   } catch {
     return json({ error: "The game is temporarily unavailable. Please try again." }, 503);

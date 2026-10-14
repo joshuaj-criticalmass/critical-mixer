@@ -273,6 +273,77 @@ body {
   padding-top: 1.5rem;
 }
 
+.results-layout {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 1.5rem;
+  padding-block: 1rem 2rem;
+}
+
+.results-heading {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.results-heading .eyebrow,
+.results-heading .intro-copy {
+  margin: 0;
+}
+
+.results-heading h1 {
+  margin: 0;
+  font-family: var(--font-display), sans-serif;
+  font-size: 5rem;
+  font-weight: 400;
+  line-height: 0.9;
+}
+
+.results-winners {
+  display: grid;
+  width: min(100%, 50rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 0.75rem;
+  margin-inline: auto;
+}
+
+.winner-row {
+  display: grid;
+  min-height: 6rem;
+  align-content: center;
+  gap: 0.4rem;
+  border-top: 0.35rem solid var(--color-primary);
+  padding: 0.8rem;
+  background: var(--color-surface);
+}
+
+.winner-row strong {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.75rem;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.winner-row span {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.results-details {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(12rem, 0.6fr);
+  gap: 2rem;
+}
+
+.leaderboard-final-tier {
+  grid-template-columns: 3.5rem 5rem minmax(0, 1fr);
+}
+
+.leaderboard-final-tier span:last-child {
+  overflow-wrap: anywhere;
+}
+
 .home-group {
   min-width: 0;
   border-top: 1px solid color-mix(in srgb, var(--color-brand-black) 38%, transparent);
@@ -602,6 +673,15 @@ body {
 
   .play-copy h1 {
     font-size: 3.5rem;
+  }
+
+  .results-details {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .results-heading h1 {
+    font-size: 3.75rem;
   }
 
   .qr-ring {

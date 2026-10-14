@@ -63,3 +63,7 @@ item should be committed and pushed separately.
   generation and redemption, and `cmx:`-only WIPE guarded by typing `WIPE`.
   Admin-key tests, lint, build, and all sixteen tests pass. An unauthenticated
   WIPE request returned 401; the wipe was not executed.
+- Completed TODO: added the ended-game player results view with every tied
+  winner, named top-three tiers, and personal final points/meet count. Pure
+  leaderboard tests cover distinct tiers and tied winners. A live `ended`
+  screen check still requires an authorized Redis test state.
