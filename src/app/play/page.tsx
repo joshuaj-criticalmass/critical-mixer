@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import QRCode from "qrcode";
 import type { PlayerSession } from "@/lib/identity";
@@ -133,6 +134,15 @@ export default function PlayPage() {
             <div className="play-copy">
               <h1>You're in, {session.name}.</h1>
               <p className="intro-copy">{statusMessage}</p>
+              {gameStatus === "active" ? (
+                <Link className="primary-button scan-link" href="/scan">
+                  Scan someone <span aria-hidden="true">→</span>
+                </Link>
+              ) : (
+                <button className="primary-button" disabled type="button">
+                  Scan someone <span aria-hidden="true">→</span>
+                </button>
+              )}
               <details className="recovery-details">
                 <summary>My recovery code</summary>
                 <output className="recovery-code">{session.recoveryCode}</output>

@@ -46,3 +46,8 @@ item should be committed and pushed separately.
   sessions, join/recovery records, and player screens. The scan contract now
   awards one point for every confirmed pair, without company weighting or
   company-based stats.
+- Completed TODO: added authenticated QR scan handling, ten-minute pending
+  scan-backs, atomic idempotent confirmation, one-point scoring, and the
+  full-screen in-app camera scanner with permission handling. Scan helpers,
+  lint, build, and all ten tests pass. No Redis records were written; live
+  transaction verification awaits an approved test run.

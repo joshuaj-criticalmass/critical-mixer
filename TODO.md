@@ -15,7 +15,7 @@ the delivery workflow in [Critical-Mixer-BUILD-SPEC.md](Critical-Mixer-BUILD-SPE
 - [x] Implement player join, session handling, recovery codes, and account recovery.
 - [x] Remove company selection/player labels and make every confirmed meet worth one point.
 - [x] Implement rotating player QR codes with server-time correction, lobby gating, and a 30-second refresh indicator.
-- [ ] Implement scan validation, pending scan-backs, confirmation, scoring, and icebreakers.
+- [x] Implement in-app QR scanning, pending scan-backs, atomic one-point confirmation, and shared icebreakers.
 - [ ] Implement the native-camera QR fallback and in-app-browser guidance.
 - [ ] Implement player home, visible-tab polling, leaderboard tiers, and met-player history.
 - [ ] Implement admin controls, overview, player search, recovery QR, and data wipe.
