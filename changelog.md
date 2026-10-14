@@ -35,7 +35,7 @@ item should be committed and pushed separately.
 - Completed TODO: configured Vercel to recognize the Next.js framework and
   created a protected Preview deployment through the Vercel CLI. The latest
   Preview, including the QR work, is:
-  https://critical-mixer-fxnzn0jv3-joshuabrainjaffe.vercel.app
+  https://critical-mixer-ge2wwayrc-joshuabrainjaffe.vercel.app
 - The Preview is protected by Vercel Authentication. No Production deployment
   was made.
 - Completed TODO: added an authenticated game-status/server-time endpoint and
