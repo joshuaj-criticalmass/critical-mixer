@@ -18,7 +18,7 @@ the delivery workflow in [Critical-Mixer-BUILD-SPEC.md](Critical-Mixer-BUILD-SPE
 - [x] Implement in-app QR scanning, pending scan-backs, atomic one-point confirmation, and shared icebreakers.
 - [x] Implement the native-camera QR fallback with token-preserving Join/Recover handoff.
 - [x] Implement player home, visible-tab polling, pending scan-backs, leaderboard tiers, and lazy met-player history.
-- [ ] Implement admin controls, overview, player search, recovery QR, and data wipe.
+- [x] Implement admin controls, overview, player search, recovery QR, and guarded data wipe.
 - [ ] Implement the ended-game results view for players.
 - [ ] Implement wrapped-stat aggregation and the host-paced reveal presentation.
 - [ ] Add supplied company logos for supporting brand acknowledgement only; keep the CM visual system.

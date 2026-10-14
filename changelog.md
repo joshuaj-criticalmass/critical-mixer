@@ -58,3 +58,8 @@ item should be committed and pushed separately.
   tiers, and pending scan-backs on visible-tab polling; added lazy `/api/met`
   history and the player home progress sections. Redis response parsing tests,
   lint, build, and all thirteen tests pass. No live player data was changed.
+- Completed TODO: added password-protected host controls for lobby/start/end/
+  reopen, player/meet/top-three overview, name search, one-time login QR
+  generation and redemption, and `cmx:`-only WIPE guarded by typing `WIPE`.
+  Admin-key tests, lint, build, and all sixteen tests pass. An unauthenticated
+  WIPE request returned 401; the wipe was not executed.
