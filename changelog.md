@@ -51,3 +51,6 @@ item should be committed and pushed separately.
   full-screen in-app camera scanner with permission handling. Scan helpers,
   lint, build, and all ten tests pass. No Redis records were written; live
   transaction verification awaits an approved test run.
+- Completed TODO: added the native-camera `/m/[token]` fallback. Signed-in
+  players auto-submit the scan, while Join and Recover links preserve the
+  scanned token and resume it after authentication. No Redis data was written.

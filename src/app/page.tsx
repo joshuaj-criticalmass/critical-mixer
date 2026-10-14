@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import type { PlayerSession } from "@/lib/identity";
+import { extractPlayerQrToken } from "@/lib/scan-utils";
 
 type ApiResponse = {
   session?: PlayerSession;
@@ -50,7 +51,9 @@ export default function Home() {
   }
 
   function continueToGame() {
-    router.push("/play");
+    const scannedValue = new URLSearchParams(window.location.search).get("scan");
+    const scanToken = extractPlayerQrToken(scannedValue);
+    router.push(scanToken ? `/m/${scanToken}` : "/play");
   }
 
   return (

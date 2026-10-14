@@ -5,31 +5,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type QrScanner from "qr-scanner";
 import type { PlayerSession } from "@/lib/identity";
-
-type ScanOutcome =
-  | {
-      result: "pending";
-      other: { id: string; name: string };
-      icebreaker: string;
-      expiresAt: number;
-    }
-  | {
-      result: "confirmed";
-      other: { id: string; name: string };
-      points: 1;
-      icebreaker: string;
-    }
-  | { result: "already_met"; other: { id: string; name: string } }
-  | { result: "error"; message: string };
-
-type ScanResponse = {
-  result?: "pending" | "confirmed" | "already_met";
-  other?: { id: string; name: string };
-  icebreaker?: string;
-  expiresAt?: number;
-  points?: 1;
-  error?: string;
-};
+import { ScanResultSummary } from "@/components/ScanResultSummary";
+import { submitScan } from "@/lib/scan-client";
+import type { ScanOutcome } from "@/lib/scan-types";
 
 function cameraErrorMessage(error: unknown): string {
   const name = error instanceof DOMException ? error.name : "";
@@ -75,69 +53,18 @@ export default function ScanPage() {
     }
   }, [router]);
 
-  async function submitScan(token: string): Promise<void> {
+  async function handleScanToken(token: string): Promise<void> {
     if (!session) return;
 
     setIsSubmitting(true);
-    try {
-      const response = await fetch("/api/scan", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-player-id": session.playerId,
-          "x-session-sig": session.sessionSig,
-        },
-        body: JSON.stringify({ token }),
-        cache: "no-store",
-      });
-      const result = (await response.json()) as ScanResponse;
-
-      if (!response.ok) {
-        setScanOutcome({
-          result: "error",
-          message: typeof result.error === "string"
-            ? result.error
-            : "We couldn't process that code. Please try again.",
-        });
-        return;
-      }
-
-      if (result.result === "pending" && result.other && result.icebreaker && result.expiresAt) {
-        setScanOutcome({
-          result: "pending",
-          other: result.other,
-          icebreaker: result.icebreaker,
-          expiresAt: result.expiresAt,
-        });
-        return;
-      }
-      if (result.result === "confirmed" && result.other && result.icebreaker) {
-        setScanOutcome({
-          result: "confirmed",
-          other: result.other,
-          points: 1,
-          icebreaker: result.icebreaker,
-        });
-        navigator.vibrate?.(65);
-        return;
-      }
-      if (result.result === "already_met" && result.other) {
-        setScanOutcome({ result: "already_met", other: result.other });
-        return;
-      }
-      setScanOutcome({ result: "error", message: "We couldn't process that code. Please try again." });
-    } catch {
-      setScanOutcome({
-        result: "error",
-        message: "We couldn't reach the game. Check your connection and try again.",
-      });
-    } finally {
-      setIsSubmitting(false);
-      handlingScan.current = false;
-    }
+    const outcome = await submitScan(token, session);
+    setScanOutcome(outcome);
+    if (outcome.result === "confirmed") navigator.vibrate?.(65);
+    setIsSubmitting(false);
+    handlingScan.current = false;
   }
 
-  submitScanRef.current = submitScan;
+  submitScanRef.current = handleScanToken;
 
   useEffect(() => {
     if (!session || !videoRef.current) return;
@@ -239,36 +166,7 @@ export default function ScanPage() {
 
         {scanOutcome && (
           <section className={`scan-result scan-result-${scanOutcome.result}`}>
-            {scanOutcome.result === "pending" && (
-              <>
-                <p className="eyebrow">Your scan is in</p>
-                <h1>Now have {scanOutcome.other.name} scan you back.</h1>
-                <p className="scan-countdown">
-                  {Math.floor(secondsLeft / 60)}:{String(secondsLeft % 60).padStart(2, "0")} left to confirm
-                </p>
-                <blockquote>{scanOutcome.icebreaker}</blockquote>
-              </>
-            )}
-            {scanOutcome.result === "confirmed" && (
-              <>
-                <p className="eyebrow">Connection confirmed</p>
-                <h1>You met {scanOutcome.other.name}!</h1>
-                <p className="scan-points">+1 point for both of you</p>
-                <blockquote>{scanOutcome.icebreaker}</blockquote>
-              </>
-            )}
-            {scanOutcome.result === "already_met" && (
-              <>
-                <p className="eyebrow">Already connected</p>
-                <h1>You've already met {scanOutcome.other.name}.</h1>
-              </>
-            )}
-            {scanOutcome.result === "error" && (
-              <>
-                <p className="eyebrow">Couldn't scan that</p>
-                <p className="scan-error" role="alert">{scanOutcome.message}</p>
-              </>
-            )}
+            <ScanResultSummary outcome={scanOutcome} secondsLeft={secondsLeft} />
             <div className="scan-actions">
               <button className="primary-button" onClick={() => void scanAnother()} type="button">
                 Scan another <span aria-hidden="true">→</span>

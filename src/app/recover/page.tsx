@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import type { PlayerSession } from "@/lib/identity";
+import { extractPlayerQrToken } from "@/lib/scan-utils";
 
 type ApiResponse = {
   session?: PlayerSession;
@@ -36,7 +37,9 @@ export default function RecoverPage() {
       }
 
       localStorage.setItem("cmx:session", JSON.stringify(result.session));
-      router.replace("/play");
+      const scannedValue = new URLSearchParams(window.location.search).get("scan");
+      const scanToken = extractPlayerQrToken(scannedValue);
+      router.replace(scanToken ? `/m/${scanToken}` : "/play");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Please try again.");
     } finally {
