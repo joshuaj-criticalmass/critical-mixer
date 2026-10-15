@@ -2,8 +2,8 @@
 
 A 3-day, in-person "meet people" game for the unified London office team.
 Everyone gets a live QR code on their phone. When two people meet, they scan
-each other's codes. Every confirmed connection is worth one point, regardless
-of anyone's former company. Most points at the end of Day 3 wins, and ties
+each other's codes. Every confirmed connection is worth one point. Most points
+at the end of Day 3 wins, and ties
 produce multiple winners, revealed on a "Wrapped"-style big-screen page.
 
 - **Players:** ~500, all in the London office
@@ -17,8 +17,7 @@ produce multiple winners, revealed on a "Wrapped"-style big-screen page.
 ## 1. Game Rules
 
 1. A player opens the app, enters their **name**, and gets a **recovery code**
-  (they're told to screenshot it). There is no company selection or company
-  field in a player's game identity.
+  (they're told to screenshot it).
 2. The player sees their **personal QR code**, which refreshes every 30 seconds.
 3. Players meet in person. **Player A scans Player B's code.** The meet is now
    *pending*, and both phones show a shared **icebreaker question**.
@@ -78,8 +77,7 @@ ScoopShare's.
 ## 4. Screens (Player, Mobile-First)
 
 ### 4.1 Join — `/`
-- Field: **Name** (free text, 1–40 chars, trimmed). Do not ask players to pick,
-  enter, or identify with a company.
+- Field: **Name** (free text, 1–40 chars, trimmed).
 - A "Join" button, plus a secondary link: "Already playing? Log back in".
 - One line of privacy copy: *"We use your name and game activity to run
   Critical Mixer, and delete your stored data after the event."*
@@ -100,7 +98,7 @@ The main screen, top to bottom:
   under it.
 2. **"Scan someone"**, a big primary button that opens the camera scanner.
 3. **Pending scan-backs.** A card for each person who has scanned you and is
-   waiting for you to scan them back: *"Priya (Tribal) scanned you — scan her
+  waiting for you to scan them back: *"Priya scanned you — scan her
    back to lock it in! 7:42 left"*.
 4. **Your score:** *"You have **18** points · 11 people met"*.
 5. **Top 3 (hidden names).** Three rows showing the three highest distinct
@@ -199,16 +197,9 @@ branding (see §5.3).
 ### 5.3 Branding & theme tokens
 - **Product name:** Critical Mixer. Use it in the `<title>`, the join screen
   header, the PWA/home-screen name, and the reveal intro.
-- All participating companies are presented under the **Critical Mass**
-  banner. Use `cm-tokens.json` as the source of truth for the product's visual
-  identity; create `styles/tokens.css` from those tokens and mirror them into
-  the Tailwind theme. Do not create separate company themes or company color
-  palettes.
-- **Company logos are supporting assets**, not player identities or scoring
-  groups. Add the Critical Mass, artbot., Tribal, and RAPP logos when supplied
-  for appropriate brand acknowledgement; never use them to segment players,
-  scores, or game statistics. Keep the product-wide interface on the Critical
-  Mass token system.
+- **Critical Mass is the product's sole visual identity.** Use `cm-tokens.json`
+  as the source of truth; create `styles/tokens.css` from those tokens and
+  mirror them into the Tailwind theme.
 - Use PP Object Sans as the primary typeface and Compacta STD sparingly for
   impactful headlines, following the supplied token roles. Confirm font
   licensing and use approved font files before bundling them; retain sensible
@@ -276,8 +267,7 @@ branding (see §5.3).
 - **Admin recovery:** see 5.1. The token is `playerId.expiry.sig`, signed with
   `QR_SECRET`, and marked used in Redis on redemption (`SET ... NX EX 600`).
 - **Duplicate names** are fine. Where two players share a name, use a short
-  non-company disambiguator such as an initial in player-facing lists; admin
-  tools may use the player ID.
+  initial in player-facing lists; admin tools may use the player ID.
 
 ---
 
@@ -348,7 +338,7 @@ non-empty.
                  return { result: 'pending', other: B, icebreaker }
 7. CONFIRM (in one MULTI):
    - HSET pair confirmedAt
-  - pts = 1 for each player, regardless of former company
+  - pts = 1 for each player
    - HINCRBY points & meetCount on both players
    - ZINCRBY cmx:scores pts for both
    - ZADD cmx:met:{A} B now; ZADD cmx:met:{B} A now
@@ -554,9 +544,6 @@ money, or religion. Stored in `lib/icebreakers.ts` as a plain array.
 
 ## Open Items
 
-- **Company logo assets:** add supplied/approved Critical Mass, artbot.,
-  Tribal, and RAPP logos only for supporting brand acknowledgement, never for
-  player identity, scoring, or player segmentation (§5.3).
 - **Production URL:** known once deployed. Nothing in the app depends on it
   (§6); only the poster QR needs generating from it.
 - **Exact start/end times** on 3 and 5 November (the host triggers both, so

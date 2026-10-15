@@ -13,7 +13,7 @@ the delivery workflow in [Critical-Mixer-BUILD-SPEC.md](Critical-Mixer-BUILD-SPE
 - [ ] Connect the Vercel project to `joshuaj-criticalmass/critical-mixer` for automatic deployments, if the Vercel GitHub integration issue is resolved.
 - [ ] Decide what ScoopShare data to export and get explicit approval before any Redis wipe.
 - [x] Implement player join, session handling, recovery codes, and account recovery.
-- [x] Remove company selection/player labels and make every confirmed meet worth one point.
+- [x] Unify player identity and make every confirmed meet worth one point.
 - [x] Implement rotating player QR codes with server-time correction, lobby gating, and a 30-second refresh indicator.
 - [x] Implement in-app QR scanning, pending scan-backs, atomic one-point confirmation, and shared icebreakers.
 - [x] Implement the native-camera QR fallback with token-preserving Join/Recover handoff.
@@ -21,7 +21,6 @@ the delivery workflow in [Critical-Mixer-BUILD-SPEC.md](Critical-Mixer-BUILD-SPE
 - [x] Implement admin controls, overview, player search, recovery QR, and guarded data wipe.
 - [x] Implement the ended-game results view with all tied winners and revealed top-three names; live ended-state visual verification remains pending.
 - [x] Implement wrapped-stat aggregation and the host-paced reveal presentation; real event-data verification remains part of launch testing.
-- [ ] Add supplied company logos for supporting brand acknowledgement only; keep the CM visual system.
 - [ ] Test with 5–10 people across iOS and Android, including native-camera and in-app-browser flows; review Redis usage.
 - [ ] Deploy to production, generate the join poster QR, and prepare the lobby for launch.
 - [ ] Run the event, monitor Redis usage, end the game, and present the reveal.
