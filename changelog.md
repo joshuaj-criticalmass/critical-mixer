@@ -63,6 +63,11 @@ item should be committed and pushed separately.
   generation and redemption, and `cmx:`-only WIPE guarded by typing `WIPE`.
   Admin-key tests, lint, build, and all sixteen tests pass. An unauthenticated
   WIPE request returned 401; the wipe was not executed.
+- Completed TODO: added the ended-only `/api/admin/wrapped` aggregate and a
+  seven/eight-slide host-paced reveal with count-ups, London peak-hour bars,
+  third/second tiers, drumroll, and all tied winners. Keyboard/click navigation
+  and the tie slide were checked at mobile width with mocked data; no Redis
+  state was changed.
 - Completed TODO: added the ended-game player results view with every tied
   winner, named top-three tiers, and personal final points/meet count. Pure
   leaderboard tests cover distinct tiers and tied winners. A live `ended`

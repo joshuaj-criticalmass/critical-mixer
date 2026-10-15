@@ -20,7 +20,7 @@ the delivery workflow in [Critical-Mixer-BUILD-SPEC.md](Critical-Mixer-BUILD-SPE
 - [x] Implement player home, visible-tab polling, pending scan-backs, leaderboard tiers, and lazy met-player history.
 - [x] Implement admin controls, overview, player search, recovery QR, and guarded data wipe.
 - [x] Implement the ended-game results view with all tied winners and revealed top-three names; live ended-state visual verification remains pending.
-- [ ] Implement wrapped-stat aggregation and the host-paced reveal presentation.
+- [x] Implement wrapped-stat aggregation and the host-paced reveal presentation; real event-data verification remains part of launch testing.
 - [ ] Add supplied company logos for supporting brand acknowledgement only; keep the CM visual system.
 - [ ] Test with 5–10 people across iOS and Android, including native-camera and in-app-browser flows; review Redis usage.
 - [ ] Deploy to production, generate the join poster QR, and prepare the lobby for launch.
