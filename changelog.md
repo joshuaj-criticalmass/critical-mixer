@@ -34,7 +34,7 @@ item should be committed and pushed separately.
 - Completed TODO: configured Vercel to recognize the Next.js framework and
   created a protected Preview deployment through the Vercel CLI. The latest
   Preview, including the QR work, is:
-  https://critical-mixer-2cfkaru80-joshuabrainjaffe.vercel.app
+  https://critical-mixer-23ltas1k0-joshuabrainjaffe.vercel.app
 - The Preview is protected by Vercel Authentication. No Production deployment
   was made.
 - Completed TODO: added an authenticated game-status/server-time endpoint and
@@ -70,3 +70,7 @@ item should be committed and pushed separately.
   winner, named top-three tiers, and personal final points/meet count. Pure
   leaderboard tests cover distinct tiers and tied winners. A live `ended`
   screen check still requires an authorized Redis test state.
+- Blocker: the Preview Upstash resource reports `Uninstalled` and the admin
+  overview returns 503; the configured Redis hostname does not resolve. The
+  test game was not started and no player/meet data was written. Restore the
+  Upstash resource before attempting the live test.
