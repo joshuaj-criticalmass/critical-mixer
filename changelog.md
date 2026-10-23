@@ -74,3 +74,10 @@ item should be committed and pushed separately.
   overview returns 503; the configured Redis hostname does not resolve. The
   test game was not started and no player/meet data was written. Restore the
   Upstash resource before attempting the live test.
+
+## 2026-10-23
+
+- Security: upgraded Next.js 16.4.0 to 16.4.3, fixing critical advisories
+  GHSA-2464-fhr4-w9xw, GHSA-p3m5-59mp-jv5r, and GHSA-673q-mjm6-r5xr.
+  `npm audit` reports 0 vulnerabilities; tests, typecheck, lint, and build
+  pass.
