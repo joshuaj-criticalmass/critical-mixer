@@ -132,26 +132,16 @@ body {
   font-weight: 700;
 }
 
-/* CM lockup: letters, solid block, then the dot. */
+/* Official CM logo; the "CM" text in markup stays as a hidden fallback. */
 .brand-mark {
-  display: inline-flex;
-  align-items: flex-end;
-  color: var(--color-primary);
-  font-family: var(--font-body), sans-serif;
-  font-size: 1.9rem;
-  font-weight: 700;
-  letter-spacing: -0.06em;
-  line-height: 0.8;
-}
-
-.brand-mark::after {
-  width: 2.35em;
-  height: 0.8em;
-  margin-left: 0.04em;
-  content: "";
-  background:
-    linear-gradient(var(--color-primary), var(--color-primary)) 0 0 / calc(100% - 0.5em) 100% no-repeat,
-    radial-gradient(circle, var(--color-primary) 0 64%, transparent 68%) 100% 100% / 0.42em 0.42em no-repeat;
+  display: inline-block;
+  flex: none;
+  height: 1.6rem;
+  aspect-ratio: 484.91 / 111.32;
+  overflow: hidden;
+  background: url("/cm-logo.svg") center / contain no-repeat;
+  color: transparent;
+  font-size: 0;
 }
 
 .intro {
@@ -658,7 +648,7 @@ body {
 
 .scanner-header .brand-mark {
   justify-self: end;
-  font-size: 1.4rem;
+  height: 1.15rem;
 }
 
 .scanner-close {

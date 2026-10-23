@@ -241,16 +241,11 @@ async function renderRecoveryImage(session: PlayerSession): Promise<File> {
   ctx.arc(guideX, guideY, 26, 0, Math.PI * 2);
   ctx.fill();
 
-  // CM lockup.
-  ctx.textBaseline = "alphabetic";
-  ctx.font = `700 150px ${body}`;
-  ctx.fillText("CM", pad - 8, 290);
-  const markEnd = pad - 8 + ctx.measureText("CM").width;
-  ctx.fillRect(markEnd + 6, 182, 250, 108);
-  ctx.beginPath();
-  ctx.arc(markEnd + 300, 268, 26, 0, Math.PI * 2);
-  ctx.fill();
-
+  // CM logo.
+  const logo = new Image();
+  logo.src = "/cm-logo.svg";
+  await logo.decode();
+  ctx.drawImage(logo, pad, 170, 600, 600 * (111.32 / 484.91));
   ctx.fillStyle = blue;
   ctx.font = `700 34px ${body}`;
   ctx.fillText("YOUR RECOVERY CODE", pad, 860);

@@ -89,3 +89,5 @@ item should be committed and pushed separately.
   progress frame. Bundled the CM font files in `public/fonts/` (licence to be
   confirmed). Typecheck and lint pass; join and play screens checked at
   desktop and mobile widths.
+- UI: replaced the CSS-drawn CM mark with the official CM logo SVG
+  (`public/cm-logo.svg`) across all screens and in the saved recovery image.
