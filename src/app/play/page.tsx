@@ -321,6 +321,9 @@ export default function PlayPage() {
                 {pointsToTop3 > 0 && top3.length === 3 && (
                   <p className="leaderboard-nudge">{pointsToTop3} more {pointsToTop3 === 1 ? "point" : "points"} to reach the top 3</p>
                 )}
+                <Link className="secondary-link live-link" href="/live">
+                  See the live board <span aria-hidden="true">→</span>
+                </Link>
               </section>
 
               <details className="home-group met-group" onToggle={(event) => {

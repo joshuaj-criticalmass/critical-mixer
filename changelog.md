@@ -91,3 +91,11 @@ item should be committed and pushed separately.
   desktop and mobile widths.
 - UI: replaced the CSS-drawn CM mark with the official CM logo SVG
   (`public/cm-logo.svg`) across all screens and in the saved recovery image.
+- Resolved: the deleted Upstash database was replaced by the Vercel
+  Marketplace resource `critical-mixer-kv`, connected to all environments.
+- Completed TODO: added the anonymous live board. `GET /api/live` returns
+  status, player and meet totals, nameless top-three tiers, and eight hours
+  of meets, with a 5-second CDN cache. `/live` is the phone view, linked from
+  the player leaderboard; `/live?screen` scales up for an office display,
+  adds a join QR, and holds a screen wake lock. Opened from the admin header.
+  Three new tests (24 total), typecheck, and lint pass; both layouts checked.

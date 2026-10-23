@@ -21,7 +21,8 @@ the delivery workflow in [Critical-Mixer-BUILD-SPEC.md](Critical-Mixer-BUILD-SPE
 - [x] Implement admin controls, overview, player search, recovery QR, and guarded data wipe.
 - [x] Implement the ended-game results view with all tied winners and revealed top-three names; live ended-state visual verification remains pending.
 - [x] Implement wrapped-stat aggregation and the host-paced reveal presentation; real event-data verification remains part of launch testing.
-- [ ] Test with 5–10 people across iOS and Android, including native-camera and in-app-browser flows; blocked until the Upstash resource is restored (Preview admin overview returns 503; no test players or meets were written).
+- [x] Add the anonymous live board: `/live` for phones and `/live?screen` for an always-on office display with a join QR.
+- [ ] Test with 5–10 people across iOS and Android, including native-camera and in-app-browser flows; the new `critical-mixer-kv` Redis database is connected, so this is unblocked.
 - [ ] Deploy to production, generate the join poster QR, and prepare the lobby for launch.
 - [ ] Run the event, monitor Redis usage, end the game, and present the reveal.
 - [ ] Export any desired final stats, then wipe all `cmx:` data after the game.

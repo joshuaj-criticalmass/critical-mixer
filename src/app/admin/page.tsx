@@ -222,7 +222,12 @@ export default function AdminPage() {
             <h1>Critical Mixer</h1>
           </div>
         </div>
-        {adminKey && <button className="secondary-button" onClick={lockAdmin} type="button">Lock</button>}
+        <div className="admin-header-actions">
+          <a className="secondary-button" href="/live?screen" rel="noreferrer" target="_blank">
+            Open big screen
+          </a>
+          {adminKey && <button className="secondary-button" onClick={lockAdmin} type="button">Lock</button>}
+        </div>
       </header>
 
       {error && <p className="admin-alert admin-alert-error" role="alert">{error}</p>}
