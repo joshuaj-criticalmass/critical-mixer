@@ -259,7 +259,7 @@ export default function PlayPage() {
             <div className="qr-panel">
               <div
                 className="qr-ring"
-                style={{ background: `conic-gradient(var(--color-primary) ${progress}%, var(--color-brand-black) 0)` }}
+                style={{ background: `conic-gradient(var(--color-primary) ${progress}%, var(--color-slate) 0)` }}
               >
                 <div className={`qr-frame ${gameStatus === "active" ? "" : "qr-frame-inactive"}`}>
                   {qrImage ? (

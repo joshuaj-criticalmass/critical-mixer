@@ -17,8 +17,46 @@
   --font-cm-display: var(--font-display), sans-serif;
 }
 
+@font-face {
+  font-family: "PP Object Sans";
+  src: url("/fonts/PPObjectSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PP Object Sans";
+  src: url("/fonts/PPObjectSans-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Compacta STD";
+  src: url("/fonts/CompactaStd.otf") format("opentype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* Poster-paper palette, mixed only from CM tokens. */
 :root {
   color-scheme: light;
+  --color-paper: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--color-brand-pinkish) 40%, var(--color-brand-eggshell)) 90%,
+    var(--color-brand-black)
+  );
+  --color-slate: color-mix(
+    in srgb,
+    var(--color-brand-calgary-blue) 12%,
+    color-mix(in srgb, var(--color-brand-black) 58%, var(--color-brand-eggshell))
+  );
+  --color-guide: color-mix(in srgb, var(--color-brand-calgary-blue) 30%, var(--color-brand-sky-blue));
+  --color-bg: var(--color-paper);
+  --color-surface: var(--color-brand-eggshell);
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .14 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --guide-x: 62%;
+  --guide-y: 30%;
 }
 
 * {
@@ -28,16 +66,53 @@
 body {
   min-height: 100vh;
   margin: 0;
-  background: var(--color-bg);
+  background: var(--paper-grain), var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-body), sans-serif;
 }
 
 .page-shell {
+  position: relative;
+  isolation: isolate;
   display: grid;
   min-height: 100vh;
   grid-template-rows: auto 1fr auto;
+  overflow-x: clip;
   padding: 2rem;
+}
+
+/* Construction guides with the CM dot at their intersection. */
+.page-shell::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at var(--guide-x) var(--guide-y),
+      var(--color-primary) 0 0.7rem,
+      transparent calc(0.7rem + 1px)
+    ),
+    repeating-linear-gradient(to bottom, var(--color-guide) 0 3px, transparent 3px 7px)
+      var(--guide-x) 0 / 1px 100% no-repeat,
+    repeating-linear-gradient(to right, var(--color-guide) 0 3px, transparent 3px 7px)
+      0 var(--guide-y) / 100% 1px no-repeat;
+}
+
+/* Halftone print texture in Calgary Blue. */
+.page-shell::after {
+  position: fixed;
+  z-index: -1;
+  top: -6rem;
+  right: -6rem;
+  width: min(46vw, 34rem);
+  aspect-ratio: 3 / 4;
+  content: "";
+  pointer-events: none;
+  background: radial-gradient(circle, var(--color-brand-calgary-blue) 0 38%, transparent 42%) 0 0 / 7px 7px;
+  mask-image: radial-gradient(ellipse 60% 55% at 62% 42%, #000 0 35%, transparent 72%);
+  opacity: 0.85;
 }
 
 .wordmark,
@@ -50,20 +125,33 @@ body {
 }
 
 .wordmark {
-  gap: 0.75rem;
-  border-bottom: 1px solid var(--color-brand-black);
+  justify-content: flex-start;
+  gap: 1rem;
   padding-bottom: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
 }
 
+/* CM lockup: letters, solid block, then the dot. */
 .brand-mark {
-  display: grid;
-  width: 2.5rem;
-  aspect-ratio: 1;
-  place-items: center;
-  background: var(--color-brand-rorange);
-  color: var(--color-brand-white);
-  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: flex-end;
+  color: var(--color-primary);
+  font-family: var(--font-body), sans-serif;
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+}
+
+.brand-mark::after {
+  width: 2.35em;
+  height: 0.8em;
+  margin-left: 0.04em;
+  content: "";
+  background:
+    linear-gradient(var(--color-primary), var(--color-primary)) 0 0 / calc(100% - 0.5em) 100% no-repeat,
+    radial-gradient(circle, var(--color-primary) 0 64%, transparent 68%) 100% 100% / 0.42em 0.42em no-repeat;
 }
 
 .intro {
@@ -83,12 +171,14 @@ body {
 }
 
 .intro h1 {
-  max-width: 10ch;
+  max-width: 9ch;
   margin: 0;
+  color: var(--color-primary);
   font-family: var(--font-display), sans-serif;
-  font-size: 6rem;
+  font-size: clamp(5rem, 11vw, 9rem);
   font-weight: 400;
-  line-height: 0.9;
+  line-height: 0.84;
+  text-transform: uppercase;
 }
 
 .intro-copy {
@@ -99,10 +189,19 @@ body {
 }
 
 .page-footer {
-  border-top: 1px solid var(--color-brand-black);
   padding-top: 1rem;
   color: var(--color-text-muted);
   font-size: 0.875rem;
+}
+
+.page-footer span:first-child {
+  color: var(--color-primary);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.page-footer span:first-child::after {
+  content: ".";
 }
 
 .form-layout {
@@ -121,8 +220,10 @@ body {
 }
 
 .form-panel {
-  border-top: 0.35rem solid var(--color-primary);
-  padding-top: 1.5rem;
+  border: 1px solid var(--color-guide);
+  border-left: 0.6rem solid var(--color-slate);
+  padding: 1.5rem;
+  background: color-mix(in srgb, var(--color-brand-eggshell) 55%, transparent);
 }
 
 .field-group {
@@ -149,6 +250,7 @@ body {
 
 .text-input:focus-visible,
 .primary-button:focus-visible,
+.secondary-button:focus-visible,
 .secondary-link:focus-visible,
 .recovery-details summary:focus-visible {
   outline: 3px solid var(--color-brand-calgary-blue);
@@ -178,6 +280,9 @@ body {
   cursor: pointer;
   font: inherit;
   font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  text-transform: uppercase;
   transition: filter 160ms ease;
 }
 
@@ -224,6 +329,21 @@ body {
   gap: 1rem;
 }
 
+.recovery-panel .secondary-button {
+  width: 100%;
+  min-height: 3.5rem;
+}
+
+.recovery-panel .secondary-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.recovery-panel .secondary-button:focus-visible {
+  outline: 3px solid var(--color-brand-calgary-blue);
+  outline-offset: 3px;
+}
+
 .recovery-code {
   display: block;
   width: 100%;
@@ -231,8 +351,8 @@ body {
   padding-block: 0.5rem 1.5rem;
   color: var(--color-primary);
   font-family: var(--font-display), sans-serif;
-  font-size: 2.75rem;
-  line-height: 1;
+  font-size: 4rem;
+  line-height: 0.9;
 }
 
 .play-layout {
@@ -252,12 +372,15 @@ body {
 }
 
 .play-copy h1 {
-  max-width: 12ch;
+  max-width: 11ch;
   margin: 0;
+  color: var(--color-primary);
   font-family: var(--font-display), sans-serif;
-  font-size: 4.5rem;
+  font-size: clamp(4rem, 8vw, 6.5rem);
   font-weight: 400;
-  line-height: 0.95;
+  line-height: 0.86;
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
 }
 
 .play-copy .intro-copy {
@@ -269,7 +392,7 @@ body {
   grid-column: 1 / -1;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 2rem 3rem;
-  border-top: 1px solid var(--color-brand-black);
+  border-top: 1px dashed var(--color-guide);
   padding-top: 1.5rem;
 }
 
@@ -294,10 +417,12 @@ body {
 
 .results-heading h1 {
   margin: 0;
+  color: var(--color-primary);
   font-family: var(--font-display), sans-serif;
-  font-size: 5rem;
+  font-size: clamp(5rem, 10vw, 8rem);
   font-weight: 400;
-  line-height: 0.9;
+  line-height: 0.85;
+  text-transform: uppercase;
 }
 
 .results-winners {
@@ -320,9 +445,11 @@ body {
 
 .winner-row strong {
   font-family: var(--font-display), sans-serif;
-  font-size: 1.75rem;
+  font-size: 2.5rem;
   font-weight: 400;
+  line-height: 0.9;
   overflow-wrap: anywhere;
+  text-transform: uppercase;
 }
 
 .winner-row span {
@@ -346,23 +473,26 @@ body {
 
 .home-group {
   min-width: 0;
-  border-top: 1px solid color-mix(in srgb, var(--color-brand-black) 38%, transparent);
-  padding-top: 0.9rem;
+  border-left: 0.35rem solid var(--color-slate);
+  padding: 0.2rem 0 0.2rem 0.9rem;
 }
 
 .home-group h2,
 .met-group summary {
   margin: 0;
-  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
   font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .score-total {
   margin: 0.35rem 0 0;
   color: var(--color-primary);
   font-family: var(--font-display), sans-serif;
-  font-size: 3.25rem;
-  line-height: 1;
+  font-size: 5rem;
+  line-height: 0.85;
 }
 
 .home-group > p:not(.score-total) {
@@ -441,7 +571,7 @@ body {
   width: min(100%, 22rem);
   aspect-ratio: 1;
   place-items: center;
-  border-radius: 50%;
+  border-radius: 0;
   padding: 0.55rem;
 }
 
@@ -452,7 +582,7 @@ body {
   aspect-ratio: 1;
   overflow: hidden;
   place-items: center;
-  border: 1px solid var(--color-brand-black);
+  border: 0;
   background: var(--color-brand-white);
 }
 
@@ -494,7 +624,7 @@ body {
   display: grid;
   width: min(100%, 24rem);
   gap: 0.5rem;
-  border-top: 1px solid var(--color-brand-black);
+  border-top: 1px dashed var(--color-guide);
   padding-top: 1rem;
 }
 
@@ -511,19 +641,24 @@ body {
   grid-template-rows: auto 1fr;
   overflow-y: auto;
   padding: max(1rem, env(safe-area-inset-top)) 1.25rem max(1rem, env(safe-area-inset-bottom));
-  background: var(--color-bg);
+  background: var(--paper-grain), var(--color-bg);
   color: var(--color-text);
 }
 
 .scanner-header {
   display: grid;
   width: min(100%, 56rem);
-  grid-template-columns: 2.75rem minmax(0, 1fr) 2.75rem;
+  grid-template-columns: 5.5rem minmax(0, 1fr) 5.5rem;
   align-items: center;
   gap: 0.75rem;
   margin: 0 auto;
-  border-bottom: 1px solid var(--color-brand-black);
+  border-bottom: 1px dashed var(--color-guide);
   padding-bottom: 0.8rem;
+}
+
+.scanner-header .brand-mark {
+  justify-self: end;
+  font-size: 1.4rem;
 }
 
 .scanner-close {
@@ -604,10 +739,12 @@ body {
 
 .scan-result h1 {
   margin: 0;
+  color: var(--color-primary);
   font-family: var(--font-display), sans-serif;
-  font-size: 2.75rem;
+  font-size: 3.75rem;
   font-weight: 400;
-  line-height: 0.98;
+  line-height: 0.88;
+  text-transform: uppercase;
 }
 
 .scan-result blockquote {
@@ -644,8 +781,18 @@ body {
     padding: 1.25rem;
   }
 
+  .page-shell {
+    --guide-x: 78%;
+    --guide-y: 18%;
+  }
+
+  .page-shell::after {
+    width: 15rem;
+    opacity: 0.6;
+  }
+
   .intro h1 {
-    font-size: 4rem;
+    font-size: 5.25rem;
   }
 
   .page-footer {
@@ -672,7 +819,7 @@ body {
   }
 
   .play-copy h1 {
-    font-size: 3.5rem;
+    font-size: 4.25rem;
   }
 
   .results-details {
@@ -681,7 +828,7 @@ body {
   }
 
   .results-heading h1 {
-    font-size: 3.75rem;
+    font-size: 4.75rem;
   }
 
   .qr-ring {
@@ -707,15 +854,16 @@ body {
   }
 
   .scan-result h1 {
-    font-size: 2.25rem;
+    font-size: 3rem;
   }
 
   .recovery-code {
-    font-size: 2.25rem;
+    font-size: 3.25rem;
   }
 }
 
 .admin-page {
+  position: relative;
   width: min(100% - 2rem, 72rem);
   min-height: 100vh;
   margin-inline: auto;
@@ -820,7 +968,7 @@ body {
   border: 1px solid var(--color-brand-black);
   border-radius: var(--radius);
   padding: 0.6rem 0.85rem;
-  background: var(--color-surface);
+  background: transparent;
   color: var(--color-text);
   cursor: pointer;
   font: inherit;
@@ -862,9 +1010,11 @@ body {
 }
 
 .admin-metrics strong {
+  color: var(--color-primary);
   font-family: var(--font-display), sans-serif;
-  font-size: 2rem;
+  font-size: 3rem;
   font-weight: 400;
+  line-height: 0.9;
 }
 
 .admin-top3,
@@ -1066,10 +1216,11 @@ body {
   max-width: 12ch;
   margin: 0;
   font-family: var(--font-display), sans-serif;
-  font-size: 6rem;
+  font-size: 8rem;
   font-weight: 400;
-  line-height: 0.9;
+  line-height: 0.84;
   overflow-wrap: anywhere;
+  text-transform: uppercase;
 }
 
 .reveal-subtitle {
@@ -1088,8 +1239,8 @@ body {
 
 .reveal-intro,
 .reveal-winners {
-  background: var(--color-brand-rorange);
-  color: var(--color-brand-white);
+  background: var(--paper-grain), var(--color-paper);
+  color: var(--color-brand-rorange);
 }
 
 .reveal-players {

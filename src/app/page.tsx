@@ -18,10 +18,41 @@ export default function Home() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isInAppBrowser, setIsInAppBrowser] = useState(false);
+  const [codeImage, setCodeImage] = useState<File | null>(null);
 
   useEffect(() => {
     setIsInAppBrowser(/Teams|Slack|FBAN|FBAV|Instagram|LinkedInApp/i.test(navigator.userAgent));
   }, []);
+
+  // Pre-render so the share sheet opens within the tap's user-activation window.
+  useEffect(() => {
+    if (!session) return;
+    let cancelled = false;
+    renderRecoveryImage(session)
+      .then((file) => !cancelled && setCodeImage(file))
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [session]);
+
+  async function saveCodeImage() {
+    if (!codeImage) return;
+    if (navigator.canShare?.({ files: [codeImage] })) {
+      try {
+        await navigator.share({ files: [codeImage], title: "Critical Mixer recovery code" });
+        return;
+      } catch (caught) {
+        if (caught instanceof DOMException && caught.name === "AbortError") return;
+      }
+    }
+    const url = URL.createObjectURL(codeImage);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = codeImage.name;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
 
   async function handleJoin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -77,6 +108,14 @@ export default function Home() {
           <div className="form-panel recovery-panel">
             <p className="field-label">Your recovery code</p>
             <output className="recovery-code">{session.recoveryCode}</output>
+            <button
+              className="secondary-button"
+              disabled={!codeImage}
+              onClick={saveCodeImage}
+              type="button"
+            >
+              Save code image
+            </button>
             <button className="primary-button" onClick={continueToGame}>
               Got it <span aria-hidden="true">→</span>
             </button>
@@ -131,4 +170,119 @@ export default function Home() {
       </footer>
     </main>
   );
+}
+
+async function renderRecoveryImage(session: PlayerSession): Promise<File> {
+  const tokens = getComputedStyle(document.documentElement);
+  const token = (name: string) => tokens.getPropertyValue(name).trim();
+  const body = `"${token("--font-body").replace(/"/g, "")}", sans-serif`;
+  const display = `"${token("--font-display").replace(/"/g, "")}", sans-serif`;
+  await Promise.all([
+    document.fonts.load(`700 40px ${body}`),
+    document.fonts.load(`400 40px ${body}`),
+    document.fonts.load(`400 40px ${display}`),
+  ]).catch(() => undefined);
+
+  // Canvas can't parse color-mix(), so let the browser resolve each token to rgb().
+  const probe = document.createElement("span");
+  document.body.append(probe);
+  const color = (name: string) => {
+    probe.style.color = `var(${name})`;
+    return getComputedStyle(probe).color;
+  };
+  const paper = color("--color-paper");
+  const primary = color("--color-primary");
+  const guide = color("--color-guide");
+  const slate = color("--color-slate");
+  const blue = color("--color-brand-calgary-blue");
+  const ink = color("--color-text");
+  probe.remove();
+
+  const width = 1080;
+  const height = 1920;
+  const pad = 96;
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas unavailable");
+
+  ctx.fillStyle = paper;
+  ctx.fillRect(0, 0, width, height);
+
+  // Halftone corner.
+  ctx.fillStyle = blue;
+  for (let y = 0; y < 760; y += 16) {
+    for (let x = 520; x < width + 16; x += 16) {
+      const falloff = 1 - Math.hypot((x - 900) / 420, (y - 260) / 480);
+      if (falloff > 0) {
+        ctx.beginPath();
+        ctx.arc(x, y, Math.min(7.5, falloff * 11), 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  // Construction guides and dot.
+  const guideX = 700;
+  const guideY = 640;
+  ctx.strokeStyle = guide;
+  ctx.lineWidth = 2;
+  ctx.setLineDash([8, 10]);
+  ctx.beginPath();
+  ctx.moveTo(guideX, 0);
+  ctx.lineTo(guideX, height);
+  ctx.moveTo(0, guideY);
+  ctx.lineTo(width, guideY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = primary;
+  ctx.beginPath();
+  ctx.arc(guideX, guideY, 26, 0, Math.PI * 2);
+  ctx.fill();
+
+  // CM lockup.
+  ctx.textBaseline = "alphabetic";
+  ctx.font = `700 150px ${body}`;
+  ctx.fillText("CM", pad - 8, 290);
+  const markEnd = pad - 8 + ctx.measureText("CM").width;
+  ctx.fillRect(markEnd + 6, 182, 250, 108);
+  ctx.beginPath();
+  ctx.arc(markEnd + 300, 268, 26, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = blue;
+  ctx.font = `700 34px ${body}`;
+  ctx.fillText("YOUR RECOVERY CODE", pad, 860);
+
+  ctx.fillStyle = primary;
+  let size = 300;
+  ctx.font = `${size}px ${display}`;
+  while (ctx.measureText(session.recoveryCode).width > width - pad * 2 && size > 80) {
+    size -= 8;
+    ctx.font = `${size}px ${display}`;
+  }
+  ctx.fillText(session.recoveryCode, pad, 890 + size * 0.86);
+
+  ctx.fillStyle = slate;
+  ctx.fillRect(pad, 960 + size, 14, 150);
+  ctx.fillStyle = ink;
+  ctx.font = `700 52px ${body}`;
+  ctx.fillText(session.name, pad + 44, 1020 + size, width - pad * 2 - 44);
+  ctx.fillStyle = blue;
+  ctx.font = `400 32px ${body}`;
+  ctx.fillText("Use your name and this code to log back in.", pad + 44, 1080 + size, width - pad * 2 - 44);
+
+  ctx.fillStyle = primary;
+  ctx.font = `400 120px ${display}`;
+  ctx.fillText("CRITICAL MIXER", pad, height - 200);
+  ctx.fillStyle = ink;
+  ctx.font = `700 32px ${body}`;
+  ctx.fillText("Critical Mass. London / 3-5 November 2026", pad, height - 130, width - pad * 2);
+
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
+  if (!blob) throw new Error("Image export failed");
+  return new File([blob], `critical-mixer-${session.recoveryCode.toLowerCase()}.png`, {
+    type: "image/png",
+  });
 }

@@ -81,3 +81,11 @@ item should be committed and pushed separately.
   GHSA-2464-fhr4-w9xw, GHSA-p3m5-59mp-jv5r, and GHSA-673q-mjm6-r5xr.
   `npm audit` reports 0 vulnerabilities; tests, typecheck, lint, and build
   pass.
+- UI: added a "Save code image" button to the recovery code screen; it renders
+  a PNG of the name and code and opens the share sheet (download fallback).
+- UI: poster-style redesign using only CM tokens: paper grain background,
+  dashed guide lines with the CM dot, Calgary Blue halftone, CM block-and-dot
+  lockup, uppercase Compacta headlines, slate-bar panels, and a square QR
+  progress frame. Bundled the CM font files in `public/fonts/` (licence to be
+  confirmed). Typecheck and lint pass; join and play screens checked at
+  desktop and mobile widths.
