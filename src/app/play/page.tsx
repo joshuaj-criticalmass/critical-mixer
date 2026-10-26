@@ -191,7 +191,7 @@ export default function PlayPage() {
     : 0;
 
   return (
-    <main className="page-shell">
+    <main className="page-shell poppy-shell">
       <header className="wordmark">
         <span className="brand-mark" aria-hidden="true">CM</span>
         <span>Critical Mixer</span>

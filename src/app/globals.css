@@ -115,6 +115,31 @@ body {
   opacity: 0.85;
 }
 
+/* Poppy the pigeon replaces the halftone on game screens. */
+.poppy-shell::after {
+  top: auto;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  height: 90vh;
+  aspect-ratio: 1679 / 2212;
+  background: url("/poppy.svg") right bottom / contain no-repeat;
+  mask-image: none;
+  opacity: 1;
+}
+
+/* Keep wide-screen content clear of most of Poppy. */
+@media (min-width: 900px) {
+  .poppy-shell {
+    padding-right: calc(90vh * 1679 / 2212 * 0.75);
+  }
+
+  .poppy-shell .page-footer {
+    justify-content: flex-start;
+    gap: 2rem;
+  }
+}
+
 .wordmark,
 .page-footer {
   display: flex;
@@ -779,6 +804,11 @@ body {
   .page-shell::after {
     width: 15rem;
     opacity: 0.6;
+  }
+
+  .poppy-shell::after {
+    width: auto;
+    opacity: 0.18;
   }
 
   .intro h1 {
@@ -1652,6 +1682,29 @@ html:has(.live-screen) {
   }
 
   .live-join { grid-area: join; }
+
+  /* An unattended display can't scroll, so fit everything in one viewport. */
+  .live-screen {
+    padding-block: 1.5rem;
+  }
+
+  .live-screen .live-layout {
+    gap: 1.75rem 3rem;
+    padding-block: 1.25rem;
+  }
+
+  .live-screen .live-hero h1 {
+    font-size: 4.5rem;
+  }
+
+  .live-screen .live-number {
+    margin-top: 1rem;
+    font-size: 11rem;
+  }
+
+  .live-screen .live-chart {
+    height: 6.5rem;
+  }
 }
 
 @keyframes live-pulse {

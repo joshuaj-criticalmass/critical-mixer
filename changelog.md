@@ -108,3 +108,8 @@ item should be committed and pushed separately.
   and `.svg`) with high error correction. Production shares the
   `critical-mixer-kv` database, which still holds test data from an active
   test game; no data was changed.
+- UI: Poppy the pigeon (`public/poppy.svg`) replaces the halftone on `/play`
+  and `/live`, anchored bottom-right at 90% of the viewport height. Wide
+  screens reserve space so content sits beside her; phones show her as a
+  faded watermark for legibility. `/live?screen` now fits a 1080p display
+  without scrolling.

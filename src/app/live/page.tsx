@@ -115,7 +115,7 @@ export default function LivePage() {
   const busiestHour = Math.max(0, ...hours.map((hour) => hour.meets));
 
   return (
-    <main className={`page-shell live-shell${screenMode ? " live-screen" : ""}`}>
+    <main className={`page-shell poppy-shell live-shell${screenMode ? " live-screen" : ""}`}>
       <header className="wordmark">
         <span className="brand-mark" aria-hidden="true">CM</span>
         <span>Critical Mixer</span>
