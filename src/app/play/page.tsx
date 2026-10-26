@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import QRCode from "qrcode";
+import { HowToPlay } from "@/components/HowToPlay";
 import type { PlayerSession } from "@/lib/identity";
 import {
   createPlayerQrToken,
@@ -251,6 +252,10 @@ export default function PlayPage() {
                   Scan someone <span aria-hidden="true">→</span>
                 </button>
               )}
+              <details className="recovery-details">
+                <summary>How to play</summary>
+                <HowToPlay />
+              </details>
               <details className="recovery-details">
                 <summary>My recovery code</summary>
                 <output className="recovery-code">{session.recoveryCode}</output>

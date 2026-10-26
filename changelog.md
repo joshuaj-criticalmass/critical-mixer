@@ -113,3 +113,6 @@ item should be committed and pushed separately.
   screens reserve space so content sits beside her; phones show her as a
   faded watermark for legibility. `/live?screen` now fits a 1080p display
   without scrolling.
+- UI: added the approved three-step "How to play" copy to the join screen and
+  as a collapsible section on the player screen. The icebreaker is
+  deliberately left out as a surprise.

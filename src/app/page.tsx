@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
+import { HowToPlay } from "@/components/HowToPlay";
 import type { PlayerSession } from "@/lib/identity";
 import { extractPlayerQrToken } from "@/lib/scan-utils";
 
@@ -129,6 +130,10 @@ export default function Home() {
             <p className="intro-copy">
               Three days. One office. A few more reasons to say hello.
             </p>
+            <section className="how-to-play-section" aria-labelledby="how-to-play-heading">
+              <h2 id="how-to-play-heading" className="eyebrow">How to play</h2>
+              <HowToPlay />
+            </section>
           </div>
           <div className="form-panel">
             <form onSubmit={handleJoin}>
