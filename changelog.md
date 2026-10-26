@@ -99,3 +99,12 @@ item should be committed and pushed separately.
   the player leaderboard; `/live?screen` scales up for an office display,
   adds a join QR, and holds a screen wake lock. Opened from the admin header.
   Three new tests (24 total), typecheck, and lint pass; both layouts checked.
+
+## 2026-10-26
+
+- Deployed `0fdc25c` to production at https://critical-mixer.vercel.app.
+  The domain, live API, fonts, and logo respond publicly without Vercel
+  authentication. Generated the join QR (`qr/critical-mixer-join.png`, 2048px,
+  and `.svg`) with high error correction. Production shares the
+  `critical-mixer-kv` database, which still holds test data from an active
+  test game; no data was changed.
