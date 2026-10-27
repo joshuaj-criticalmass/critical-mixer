@@ -27,6 +27,28 @@ export function normalizeNameForMatch(value: string): string {
   return value.trim().replace(/\s+/g, " ").toLocaleLowerCase("en-GB");
 }
 
+export type PlayerNameParts = { firstName: string; middleName: string; lastName: string };
+
+const NAME_PART_MAX = 30;
+
+// "|" is the legacy separator in stored names, so it's never allowed in a part.
+function cleanNamePart(value: unknown): string {
+  return typeof value === "string" ? value.replace(/\|/g, "").trim().replace(/\s+/g, " ") : "";
+}
+
+export function normalizeNameParts(input: Record<string, unknown>): PlayerNameParts | null {
+  const firstName = cleanNamePart(input.firstName);
+  const middleName = cleanNamePart(input.middleName);
+  const lastName = cleanNamePart(input.lastName);
+  if (!firstName || !lastName) return null;
+  if ([firstName, middleName, lastName].some((part) => part.length > NAME_PART_MAX)) return null;
+  return { firstName, middleName, lastName };
+}
+
+export function formatPlayerName({ firstName, middleName, lastName }: PlayerNameParts): string {
+  return [firstName, middleName, lastName].filter(Boolean).join(" ");
+}
+
 export function normalizeRecoveryCode(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const code = value.trim().toUpperCase();

@@ -13,7 +13,8 @@ type ApiResponse = {
 
 export default function RecoverPage() {
   const router = useRouter();
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,7 +28,7 @@ export default function RecoverPage() {
       const response = await fetch("/api/recover", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, code }),
+        body: JSON.stringify({ firstName, lastName, code }),
         cache: "no-store",
       });
       const result = (await response.json()) as ApiResponse;
@@ -57,19 +58,30 @@ export default function RecoverPage() {
         <div className="intro form-intro">
           <p className="eyebrow">Welcome back</p>
           <h1 id="page-title">Pick up where you left off.</h1>
-          <p className="intro-copy">Your name and recovery code will get you back in.</p>
+          <p className="intro-copy">Your first and last name and recovery code will get you back in.</p>
         </div>
         <div className="form-panel">
           <form onSubmit={handleRecover}>
             <label className="field-group">
-              <span className="field-label">Your name</span>
+              <span className="field-label">First name</span>
               <input
-                autoComplete="name"
+                autoComplete="given-name"
                 className="text-input"
-                maxLength={40}
-                onChange={(event) => setName(event.target.value)}
+                maxLength={30}
+                onChange={(event) => setFirstName(event.target.value)}
                 required
-                value={name}
+                value={firstName}
+              />
+            </label>
+            <label className="field-group">
+              <span className="field-label">Last name</span>
+              <input
+                autoComplete="family-name"
+                className="text-input"
+                maxLength={30}
+                onChange={(event) => setLastName(event.target.value)}
+                required
+                value={lastName}
               />
             </label>
             <label className="field-group">

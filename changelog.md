@@ -116,3 +116,17 @@ item should be committed and pushed separately.
 - UI: added the approved three-step "How to play" copy to the join screen and
   as a collapsible section on the player screen. The icebreaker is
   deliberately left out as a surprise.
+
+## 2026-10-27
+
+- Join now asks for first, middle (optional), and last name so winners are
+  identifiable. The full name is still stored as `name`, with `firstName`,
+  `middleName`, and `lastName` alongside. Recovery matches first and last
+  name plus the recovery code; players who joined earlier still recover by
+  their stored full name. Parts are capped at 30 characters.
+- Added a full rules page at `/rules`, linked from the player screen's
+  How to play section and from the live board.
+- Added a simplified rules panel to `/live`; on `/live?screen` it sits
+  beside the chart and the board still fits a 1080p display.
+- Two new name tests (26 total), typecheck, and lint pass. Join/recover
+  validation was checked with rejected requests only; no data was written.

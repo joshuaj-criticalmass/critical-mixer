@@ -255,6 +255,9 @@ export default function PlayPage() {
               <details className="recovery-details">
                 <summary>How to play</summary>
                 <HowToPlay />
+                <Link className="secondary-link" href="/rules">
+                  Read the full rules <span aria-hidden="true">→</span>
+                </Link>
               </details>
               <details className="recovery-details">
                 <summary>My recovery code</summary>

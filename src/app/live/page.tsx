@@ -114,6 +114,23 @@ export default function LivePage() {
   const hours = snapshot?.recentHours ?? [];
   const busiestHour = Math.max(0, ...hours.map((hour) => hour.meets));
 
+  const rules = (
+    <section className="live-rules" aria-labelledby="live-rules-heading">
+      <h2 id="live-rules-heading">The rules</h2>
+      <ul>
+        <li>Scan each other&apos;s codes to score.</li>
+        <li>1 point for each new person you meet.</li>
+        <li>You both have to scan within 10 minutes.</li>
+        <li>Most points by Thursday 5 November wins. Ties all win.</li>
+      </ul>
+      {!screenMode && (
+        <Link className="secondary-link" href="/rules">
+          Full rules <span aria-hidden="true">→</span>
+        </Link>
+      )}
+    </section>
+  );
+
   return (
     <main className={`page-shell poppy-shell live-shell${screenMode ? " live-screen" : ""}`}>
       <header className="wordmark">
@@ -172,6 +189,8 @@ export default function LivePage() {
             ))}
           </div>
         </section>
+
+        {rules}
 
         {screenMode ? (
           <aside className="live-join" aria-label="Join Critical Mixer">

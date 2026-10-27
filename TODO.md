@@ -22,6 +22,7 @@ the delivery workflow in [Critical-Mixer-BUILD-SPEC.md](Critical-Mixer-BUILD-SPE
 - [x] Implement the ended-game results view with all tied winners and revealed top-three names; live ended-state visual verification remains pending.
 - [x] Implement wrapped-stat aggregation and the host-paced reveal presentation; real event-data verification remains part of launch testing.
 - [x] Add the anonymous live board: `/live` for phones and `/live?screen` for an always-on office display with a join QR.
+- [x] Add How to play, a full `/rules` page, live-board rules, and first/middle/last name entry.
 - [ ] Test with 5–10 people across iOS and Android, including native-camera and in-app-browser flows; the new `critical-mixer-kv` Redis database is connected, so this is unblocked.
 - [ ] Deploy to production, generate the join poster QR, and prepare the lobby for launch. Deployed to https://critical-mixer.vercel.app and generated `qr/critical-mixer-join.{png,svg}`; lobby prep (clear test data, reset to lobby, confirm production admin secret) remains.
 - [ ] Run the event, monitor Redis usage, end the game, and present the reveal.

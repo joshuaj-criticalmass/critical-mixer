@@ -14,7 +14,9 @@ type ApiResponse = {
 
 export default function Home() {
   const router = useRouter();
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [middleName, setMiddleName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [session, setSession] = useState<PlayerSession | null>(null);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,7 +66,7 @@ export default function Home() {
       const response = await fetch("/api/join", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ firstName, middleName, lastName }),
         cache: "no-store",
       });
       const result = (await response.json()) as ApiResponse;
@@ -102,7 +104,8 @@ export default function Home() {
             <p className="eyebrow">Keep this somewhere safe</p>
             <h1 id="recovery-title">Your way back in.</h1>
             <p className="intro-copy">
-              Screenshot this code. You will need it with your name if you
+              Screenshot this code. You will need it with your first and last
+              name if you
               switch phones or clear your browser.
             </p>
           </div>
@@ -138,15 +141,40 @@ export default function Home() {
           <div className="form-panel">
             <form onSubmit={handleJoin}>
               <label className="field-group">
-                <span className="field-label">Your name</span>
+                <span className="field-label">First name</span>
                 <input
-                  autoComplete="name"
+                  autoComplete="given-name"
                   className="text-input"
-                  maxLength={40}
-                  name="name"
-                  onChange={(event) => setName(event.target.value)}
+                  maxLength={30}
+                  name="firstName"
+                  onChange={(event) => setFirstName(event.target.value)}
                   required
-                  value={name}
+                  value={firstName}
+                />
+              </label>
+              <label className="field-group">
+                <span className="field-label">
+                  Middle name <span className="field-optional">(optional)</span>
+                </span>
+                <input
+                  autoComplete="additional-name"
+                  className="text-input"
+                  maxLength={30}
+                  name="middleName"
+                  onChange={(event) => setMiddleName(event.target.value)}
+                  value={middleName}
+                />
+              </label>
+              <label className="field-group">
+                <span className="field-label">Last name</span>
+                <input
+                  autoComplete="family-name"
+                  className="text-input"
+                  maxLength={30}
+                  name="lastName"
+                  onChange={(event) => setLastName(event.target.value)}
+                  required
+                  value={lastName}
                 />
               </label>
               {isInAppBrowser && (
@@ -271,7 +299,7 @@ async function renderRecoveryImage(session: PlayerSession): Promise<File> {
   ctx.fillText(session.name, pad + 44, 1020 + size, width - pad * 2 - 44);
   ctx.fillStyle = blue;
   ctx.font = `400 32px ${body}`;
-  ctx.fillText("Use your name and this code to log back in.", pad + 44, 1080 + size, width - pad * 2 - 44);
+  ctx.fillText("Use your first and last name and this code to log back in.", pad + 44, 1080 + size, width - pad * 2 - 44);
 
   ctx.fillStyle = primary;
   ctx.font = `400 120px ${display}`;

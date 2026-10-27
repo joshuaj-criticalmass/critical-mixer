@@ -252,6 +252,11 @@ body {
   font-weight: 700;
 }
 
+.field-optional {
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
 .text-input {
   width: 100%;
   min-height: 3.25rem;
@@ -1564,6 +1569,7 @@ html:has(.live-screen) {
 
 .live-board,
 .live-activity,
+.live-rules,
 .live-join {
   min-width: 0;
   border: 1px solid var(--color-guide);
@@ -1573,7 +1579,8 @@ html:has(.live-screen) {
 }
 
 .live-board h2,
-.live-activity h2 {
+.live-activity h2,
+.live-rules h2 {
   margin: 0 0 1rem;
   color: var(--color-text-muted);
   font-size: 0.8rem;
@@ -1583,6 +1590,66 @@ html:has(.live-screen) {
 
 .live-board > .home-muted {
   margin: 1rem 0 0;
+}
+
+.live-rules ul {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+  padding-left: 1.1rem;
+  line-height: 1.35;
+}
+
+.live-rules li::marker {
+  color: var(--color-primary);
+}
+
+.rules-layout {
+  display: grid;
+  width: min(100%, 48rem);
+  gap: 2rem;
+  margin-inline: auto;
+  padding-block: 3rem;
+}
+
+.rules-intro {
+  padding-block: 0;
+}
+
+.rules-section {
+  border-left: 0.35rem solid var(--color-slate);
+  padding-left: 1.1rem;
+}
+
+.rules-section h2 {
+  margin: 0 0 0.85rem;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.rules-list {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding-left: 1.2rem;
+  line-height: 1.5;
+}
+
+.rules-list li::marker {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.rules-actions {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+}
+
+.rules-actions .primary-button {
+  width: min(100%, 22rem);
 }
 
 .live-tiers {
@@ -1697,7 +1764,7 @@ html:has(.live-screen) {
   .live-layout {
     grid-template-areas:
       "hero board"
-      "activity board"
+      "activity rules"
       "back back";
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
     gap: 2.5rem 4rem;
@@ -1706,17 +1773,24 @@ html:has(.live-screen) {
   .live-hero { grid-area: hero; }
   .live-board { grid-area: board; align-self: start; }
   .live-activity { grid-area: activity; }
+  .live-rules { grid-area: rules; }
   .live-back { grid-area: back; }
 
   .live-screen .live-layout {
     width: 100%;
     grid-template-areas:
       "hero board join"
-      "activity activity join";
+      "activity rules rules";
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.7fr);
   }
 
   .live-join { grid-area: join; }
+
+  .live-screen .live-rules ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem 2rem;
+    margin-bottom: 0;
+  }
 
   /* An unattended display can't scroll, so fit everything in one viewport. */
   .live-screen {
@@ -1734,7 +1808,7 @@ html:has(.live-screen) {
 
   .live-screen .live-number {
     margin-top: 1rem;
-    font-size: 11rem;
+    font-size: 9.5rem;
   }
 
   .live-screen .live-chart {

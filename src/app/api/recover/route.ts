@@ -1,4 +1,4 @@
-import { hmacBase64Url, normalizePlayerName, normalizeRecoveryCode } from "@/lib/identity";
+import { hmacBase64Url, normalizeNameParts, normalizeRecoveryCode } from "@/lib/identity";
 import {
   recoverPlayer,
   RecoveryRateLimitError,
@@ -25,11 +25,11 @@ export async function POST(request: Request): Promise<Response> {
   const input = payload && typeof payload === "object"
     ? (payload as Record<string, unknown>)
     : {};
-  const name = normalizePlayerName(input.name);
+  const nameParts = normalizeNameParts(input);
   const code = normalizeRecoveryCode(input.code);
 
-  if (!name || !code) {
-    return json({ error: "Enter your name and recovery code." }, 400);
+  if (!nameParts || !code) {
+    return json({ error: "Enter your first name, last name, and recovery code." }, 400);
   }
 
   const secret = process.env.QR_SECRET;
@@ -39,7 +39,7 @@ export async function POST(request: Request): Promise<Response> {
 
   try {
     const ipKey = await hmacBase64Url(secret, `recovery-ip:${getClientIp(request)}`);
-    const session = await recoverPlayer(name, code, ipKey);
+    const session = await recoverPlayer(nameParts.firstName, nameParts.lastName, code, ipKey);
     if (!session) {
       return json({ error: "That name and recovery code did not match." }, 401);
     }

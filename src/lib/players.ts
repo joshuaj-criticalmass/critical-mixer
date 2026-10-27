@@ -3,7 +3,9 @@ import {
   createPlayerId,
   createPlayerSession,
   createRecoveryCode,
+  formatPlayerName,
   normalizeNameForMatch,
+  type PlayerNameParts,
   type PlayerSession,
 } from "./identity";
 
@@ -13,6 +15,8 @@ const playerKey = (id: string) => `cmx:player:${id}`;
 
 type StoredPlayer = {
   name?: string;
+  firstName?: string;
+  lastName?: string;
   recoveryCode?: string;
 };
 
@@ -24,11 +28,12 @@ function ensureConfigured(): void {
   }
 }
 
-export async function joinPlayer(name: string): Promise<PlayerSession> {
+export async function joinPlayer(parts: PlayerNameParts): Promise<PlayerSession> {
   ensureConfigured();
   const redis = getRedis();
 
   const id = createPlayerId();
+  const name = formatPlayerName(parts);
   const createdAt = Date.now();
 
   for (let attempt = 0; attempt < 10; attempt += 1) {
@@ -41,6 +46,9 @@ export async function joinPlayer(name: string): Promise<PlayerSession> {
         .multi()
         .hset(playerKey(id), {
           name,
+          firstName: parts.firstName,
+          middleName: parts.middleName,
+          lastName: parts.lastName,
           points: 0,
           meetCount: 0,
           recoveryCode: code,
@@ -62,7 +70,8 @@ export async function joinPlayer(name: string): Promise<PlayerSession> {
 }
 
 export async function recoverPlayer(
-  name: string,
+  firstName: string,
+  lastName: string,
   code: string,
   ipKey: string
 ): Promise<PlayerSession | null> {
@@ -75,12 +84,17 @@ export async function recoverPlayer(
 
   const id = await redis.get<string>(recoveryCodeKey(code));
   const record = id ? ((await redis.hgetall<StoredPlayer>(playerKey(id))) ?? {}) : {};
+  // Middle names are skipped so a different spelling can't lock anyone out.
+  const storedName = record.firstName && record.lastName
+    ? `${record.firstName} ${record.lastName}`
+    : record.name;
 
   if (
     !id ||
     !record.name ||
     !record.recoveryCode ||
-    normalizeNameForMatch(record.name) !== normalizeNameForMatch(name)
+    !storedName ||
+    normalizeNameForMatch(storedName) !== normalizeNameForMatch(`${firstName} ${lastName}`)
   ) {
     const nextFailures = await redis.incr(rateLimitKey);
     if (nextFailures === 1) await redis.expire(rateLimitKey, 600);
