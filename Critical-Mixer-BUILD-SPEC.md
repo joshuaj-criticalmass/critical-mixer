@@ -16,8 +16,11 @@ produce multiple winners, revealed on a "Wrapped"-style big-screen page.
 
 ## 1. Game Rules
 
-1. A player opens the app, enters their **name**, and gets a **recovery code**
-  (they're told to screenshot it).
+1. A player opens the app and enters their **first, middle (optional), and
+  last name**. Their full name is their login: entering it again on any device
+  logs them back in. No two players may share a full name; a second person
+  with the same name is asked to add a middle name or initial. Recovery codes
+  were removed after the first playtest.
 2. The player sees their **personal QR code**, which refreshes every 30 seconds.
 3. Players meet in person. **Player A scans Player B's code.** The meet is now
    *pending*, and both phones show a shared **icebreaker question**.

@@ -1,12 +1,9 @@
-import { randomInt } from "node:crypto";
 import { customAlphabet } from "nanoid";
-import { recoveryWords } from "./recovery-words.ts";
 
 const playerId = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
   10
 );
-const recoveryCodePattern = /^[A-Z]+-[A-Z]+-\d{2}$/;
 const encoder = new TextEncoder();
 
 export type PlayerSession = {
@@ -14,7 +11,6 @@ export type PlayerSession = {
   playerKey: string;
   sessionSig: string;
   name: string;
-  recoveryCode: string;
 };
 
 export function normalizePlayerName(value: unknown): string | null {
@@ -47,19 +43,6 @@ export function normalizeNameParts(input: Record<string, unknown>): PlayerNamePa
 
 export function formatPlayerName({ firstName, middleName, lastName }: PlayerNameParts): string {
   return [firstName, middleName, lastName].filter(Boolean).join(" ");
-}
-
-export function normalizeRecoveryCode(value: unknown): string | null {
-  if (typeof value !== "string") return null;
-  const code = value.trim().toUpperCase();
-  return recoveryCodePattern.test(code) ? code : null;
-}
-
-export function createRecoveryCode(randomIndex: (max: number) => number = randomInt): string {
-  const first = recoveryWords[randomIndex(recoveryWords.length)];
-  const second = recoveryWords[randomIndex(recoveryWords.length)];
-  const number = String(randomIndex(100)).padStart(2, "0");
-  return `${first}-${second}-${number}`.toUpperCase();
 }
 
 export function createPlayerId(): string {
@@ -96,7 +79,6 @@ export async function verifySessionSignature(
 export async function createPlayerSession(
   playerId: string,
   name: string,
-  recoveryCode: string,
   secret: string
 ): Promise<PlayerSession> {
   const [playerKey, sessionSig] = await Promise.all([
@@ -104,5 +86,5 @@ export async function createPlayerSession(
     hmacBase64Url(secret, `${playerId}:session`),
   ]);
 
-  return { playerId, playerKey, sessionSig, name, recoveryCode };
+  return { playerId, playerKey, sessionSig, name };
 }

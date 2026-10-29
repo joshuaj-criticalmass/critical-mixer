@@ -142,3 +142,18 @@ item should be committed and pushed separately.
   returns 410 when the player record no longer exists, and `/play` clears the
   stored session and returns to the join screen. Verified locally with a
   signed session for a non-existent player (410) and a bad signature (401).
+- Playtest fix: refreshing after joining showed the name form again, and
+  re-entering a name created a duplicate player. The join screen now sends
+  anyone with a saved session straight back to the game.
+- Replaced recovery codes with name-based login. Entering an existing full
+  name (ignoring case, accents, punctuation, and spacing) asks "Is that you?"
+  and logs in, or asks a different person to add a middle name. Close matches
+  (nicknames such as Mike/Michael, typos, extra middle names) offer "Did you
+  mean...?" before creating a new player. Exact duplicates are blocked, with a
+  per-name Redis key guarding simultaneous joins. Added `POST /api/login`;
+  removed `/api/recover`, recovery-code generation, the recovery code screen,
+  and the save-image button. `/recover` now redirects to the join screen, and
+  the host's one-time login QR no longer depends on a recovery code.
+  28 tests, typecheck, and lint pass. Join/login were checked against real
+  playtest names using only requests that return "exists"/"similar" or log in;
+  no players were created.

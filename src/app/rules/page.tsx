@@ -28,9 +28,12 @@ export default function RulesPage() {
           <ol className="rules-list">
             <li>Scan the poster QR code and enter your first and last name. A middle name is optional.</li>
             <li>
-              <strong>Save your recovery code.</strong> Screenshot it or tap{" "}
-              <strong>Save code image</strong>. You&apos;ll need it with your first and last
-              name if you switch phones or clear your browser.
+              <strong>Your name is your login.</strong> If you switch phones or clear your
+              browser, just enter the same name again to pick up where you left off.
+            </li>
+            <li>
+              <strong>No two players can have the same name.</strong> If someone already has
+              yours, add your middle name or initial.
             </li>
           </ol>
         </section>
@@ -72,8 +75,8 @@ export default function RulesPage() {
         <section className="rules-section" aria-labelledby="rules-help">
           <h2 id="rules-help">Need help?</h2>
           <ul className="rules-list">
-            <li><strong>Lost access?</strong> Tap <strong>Log back in</strong> and enter your first name, last name, and recovery code.</li>
-            <li><strong>Lost your recovery code?</strong> Find the host and they can get you back in.</li>
+            <li><strong>Lost access?</strong> Enter the same name on the join screen and you&apos;ll be logged back in.</li>
+            <li><strong>Still stuck?</strong> Find the host and they can get you back in.</li>
             <li><strong>Code expired?</strong> Ask them to hold their phone up again.</li>
           </ul>
         </section>

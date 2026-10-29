@@ -2,27 +2,11 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
   createPlayerId,
-  createRecoveryCode,
   formatPlayerName,
   normalizeNameForMatch,
   normalizeNameParts,
   normalizePlayerName,
-  normalizeRecoveryCode,
 } from "../src/lib/identity.ts";
-import { recoveryWords } from "../src/lib/recovery-words.ts";
-
-test("recovery vocabulary has 200 unique words", () => {
-  assert.equal(recoveryWords.length, 200);
-  assert.equal(new Set(recoveryWords).size, 200);
-});
-
-test("recovery codes use two words and a two-digit suffix", () => {
-  const values = [0, 1, 9];
-  const code = createRecoveryCode(() => values.shift() ?? 0);
-
-  assert.equal(code, "ACORN-ALPINE-09");
-  assert.equal(normalizeRecoveryCode(code.toLowerCase()), code);
-});
 
 test("player names are trimmed and limited to forty characters", () => {
   assert.equal(normalizePlayerName("  Jordan Lee  "), "Jordan Lee");

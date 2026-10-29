@@ -62,7 +62,7 @@ export default function NativeScanPage() {
           <p className="intro-copy">
             {session
               ? "Your scan will be sent automatically."
-              : "Join the game or log back in to complete this scan."}
+              : "Join the game, or enter your name again if you're already playing, to complete this scan."}
           </p>
         </div>
         <div className="form-panel recovery-panel">
@@ -73,10 +73,7 @@ export default function NativeScanPage() {
           ) : !session ? (
             <>
               <Link className="primary-button" href={`/${query}`}>
-                Join to complete scan <span aria-hidden="true">→</span>
-              </Link>
-              <Link className="secondary-link" href={`/recover${query}`}>
-                Already playing? Log back in
+                Continue to complete scan <span aria-hidden="true">→</span>
               </Link>
             </>
           ) : outcome ? (

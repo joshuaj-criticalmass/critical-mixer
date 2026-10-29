@@ -281,11 +281,6 @@ body {
   appearance: auto;
 }
 
-.recovery-input {
-  font-family: ui-monospace, monospace;
-  text-transform: uppercase;
-}
-
 .primary-button {
   display: flex;
   width: 100%;
@@ -349,30 +344,41 @@ body {
   gap: 1rem;
 }
 
-.recovery-panel .secondary-button {
+.name-prompt {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.name-prompt .eyebrow {
+  margin: 0;
+}
+
+.name-prompt-copy {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.45;
+}
+
+.name-prompt .secondary-button {
   width: 100%;
   min-height: 3.5rem;
+  text-align: left;
 }
 
-.recovery-panel .secondary-button:disabled {
+.name-prompt-back {
+  justify-self: start;
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.name-prompt .secondary-button:disabled {
   cursor: wait;
   opacity: 0.65;
-}
-
-.recovery-panel .secondary-button:focus-visible {
-  outline: 3px solid var(--color-brand-calgary-blue);
-  outline-offset: 3px;
-}
-
-.recovery-code {
-  display: block;
-  width: 100%;
-  overflow-wrap: anywhere;
-  padding-block: 0.5rem 1.5rem;
-  color: var(--color-primary);
-  font-family: var(--font-display), sans-serif;
-  font-size: 4rem;
-  line-height: 0.9;
 }
 
 .play-layout {
@@ -915,10 +921,6 @@ body {
 
   .scan-result h1 {
     font-size: 3rem;
-  }
-
-  .recovery-code {
-    font-size: 3.25rem;
   }
 }
 

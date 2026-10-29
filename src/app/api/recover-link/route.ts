@@ -4,7 +4,7 @@ import { getRedis, redisConfigured } from "@/lib/redis";
 
 export const runtime = "nodejs";
 
-type StoredPlayer = { name?: string; recoveryCode?: string };
+type StoredPlayer = { name?: string };
 
 export async function POST(request: Request): Promise<Response> {
   const secret = process.env.QR_SECRET ?? "";
@@ -44,17 +44,12 @@ export async function POST(request: Request): Promise<Response> {
     if (used !== "OK") return adminJson({ error: "This recovery link has already been used." }, 409);
 
     const player = await redis.hgetall<StoredPlayer>(`cmx:player:${playerId}`);
-    if (!player?.name || !player.recoveryCode) {
+    if (!player?.name) {
       return adminJson({ error: "This player account could not be found." }, 404);
     }
 
-    const session = await createPlayerSession(
-      playerId,
-      player.name,
-      player.recoveryCode,
-      secret
-    );
-    return adminJson({ session, recoveryCode: player.recoveryCode }, 200);
+    const session = await createPlayerSession(playerId, player.name, secret);
+    return adminJson({ session }, 200);
   } catch {
     return adminJson({ error: "The game is temporarily unavailable." }, 503);
   }

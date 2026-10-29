@@ -264,10 +264,6 @@ export default function PlayPage() {
                   Read the full rules <span aria-hidden="true">→</span>
                 </Link>
               </details>
-              <details className="recovery-details">
-                <summary>My recovery code</summary>
-                <output className="recovery-code">{session.recoveryCode}</output>
-              </details>
             </div>
             <div className="qr-panel">
               <div

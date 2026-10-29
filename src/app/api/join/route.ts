@@ -27,8 +27,11 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   try {
-    const session = await joinPlayer(nameParts);
-    return json({ session, recoveryCode: session.recoveryCode }, 201);
+    const outcome = await joinPlayer(nameParts, input.allowSimilar === true);
+    if (outcome.result === "joined") {
+      return json({ result: "joined", session: outcome.session }, 201);
+    }
+    return json(outcome, 409);
   } catch (error) {
     if (error instanceof PlayerServiceUnavailableError) {
       return json({ error: "The game is temporarily unavailable. Please try again." }, 503);
