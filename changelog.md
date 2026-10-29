@@ -201,3 +201,5 @@ item should be committed and pushed separately.
   "2 pts" overlapped a long list of tied names. Each tier now shows place
   and points on one line with the names wrapped underneath. Also fixed
   plurals ("1 pt", "1 person met") across `/play`.
+- Design: removed the orange dot at the guide-line intersection from all
+  page backgrounds; the dashed guides remain.
