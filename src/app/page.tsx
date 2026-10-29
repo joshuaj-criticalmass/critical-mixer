@@ -138,7 +138,13 @@ export default function Home() {
           <p className="eyebrow">London / 3-5 November 2026</p>
           <h1 id="page-title">Critical Mixer</h1>
           <p className="intro-copy">
-            Three days. One office. A few more reasons to say hello.
+            Three days. One office.
+            <br />
+            A few more reasons to say hello.
+          </p>
+          <p className="intro-copy intro-explainer">
+            Critical Mixer is a game that rewards meeting your new coworkers. Enter your name
+            to log in, and the game will start Tuesday 3/11 at 10am!
           </p>
           <section className="how-to-play-section" aria-labelledby="how-to-play-heading">
             <h2 id="how-to-play-heading" className="eyebrow">How to play</h2>

@@ -203,6 +203,11 @@ body {
   line-height: 1.5;
 }
 
+.intro-explainer {
+  margin-top: 1rem;
+  font-size: 1.05rem;
+}
+
 .page-footer {
   padding-top: 1rem;
   color: var(--color-text-muted);
