@@ -1,12 +1,25 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { HowToPlay } from "@/components/HowToPlay";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 const AUTO_CLOSE_SECONDS = 30;
 
-export function HowToPlayModal({ onClose }: { onClose: () => void }) {
+// A modal that closes on its button, Escape, or by itself after 30 seconds.
+export function AutoCloseModal({
+  eyebrow,
+  title,
+  actionLabel,
+  footer,
+  onClose,
+  children,
+}: {
+  eyebrow: string;
+  title: string;
+  actionLabel: string;
+  footer?: ReactNode;
+  onClose: () => void;
+  children: ReactNode;
+}) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [secondsLeft, setSecondsLeft] = useState(AUTO_CLOSE_SECONDS);
 
@@ -24,19 +37,19 @@ export function HowToPlayModal({ onClose }: { onClose: () => void }) {
 
   return (
     <dialog
-      aria-labelledby="how-to-play-modal-title"
-      className="how-to-play-modal"
+      aria-labelledby="auto-modal-title"
+      className="auto-modal"
       onClose={onClose}
       ref={dialogRef}
     >
-      <p className="eyebrow">You&apos;re in</p>
-      <h2 id="how-to-play-modal-title">How to play</h2>
-      <HowToPlay />
+      <p className="eyebrow">{eyebrow}</p>
+      <h2 id="auto-modal-title">{title}</h2>
+      {children}
       <button className="primary-button" onClick={() => dialogRef.current?.close()} type="button">
-        Let&apos;s go <span aria-hidden="true">→</span>
+        {actionLabel} <span aria-hidden="true">→</span>
       </button>
-      <div className="how-to-play-modal-footer">
-        <Link className="secondary-link" href="/rules">Full rules</Link>
+      <div className="auto-modal-footer">
+        {footer ?? <span />}
         <span aria-live="off">Closes in {secondsLeft}s</span>
       </div>
     </dialog>

@@ -15,7 +15,6 @@ export function ScanResultSummary({
         <p className="scan-countdown">
           {Math.floor(secondsLeft / 60)}:{String(secondsLeft % 60).padStart(2, "0")} left to confirm
         </p>
-        <blockquote>{outcome.icebreaker}</blockquote>
       </>
     );
   }
@@ -25,7 +24,6 @@ export function ScanResultSummary({
         <p className="eyebrow">Connection confirmed</p>
         <h1>You met {outcome.other.name}!</h1>
         <p className="scan-points">+1 point for both of you</p>
-        <blockquote>{outcome.icebreaker}</blockquote>
       </>
     );
   }

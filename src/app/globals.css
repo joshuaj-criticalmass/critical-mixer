@@ -696,7 +696,7 @@ body {
   font-weight: 700;
 }
 
-.how-to-play-modal {
+.auto-modal {
   width: min(100% - 2rem, 30rem);
   max-height: calc(100dvh - 2rem);
   margin: auto;
@@ -709,21 +709,21 @@ body {
   color: var(--color-text);
 }
 
-.how-to-play-modal[open] {
+.auto-modal[open] {
   display: grid;
   gap: 1.25rem;
   animation: reveal-enter 300ms ease-out both;
 }
 
-.how-to-play-modal::backdrop {
+.auto-modal::backdrop {
   background: color-mix(in srgb, var(--color-brand-black) 55%, transparent);
 }
 
-.how-to-play-modal .eyebrow {
+.auto-modal .eyebrow {
   margin: 0;
 }
 
-.how-to-play-modal h2 {
+.auto-modal h2 {
   margin: -0.75rem 0 0;
   color: var(--color-primary);
   font-family: var(--font-display), sans-serif;
@@ -733,7 +733,17 @@ body {
   text-transform: uppercase;
 }
 
-.how-to-play-modal-footer {
+.icebreaker-question {
+  margin: 0;
+  border-left: 3px solid var(--color-brand-calgary-blue);
+  padding: 0.25rem 0 0.25rem 0.9rem;
+  color: var(--color-brand-calgary-blue);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.auto-modal-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -742,7 +752,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .how-to-play-modal[open] {
+  .auto-modal[open] {
     animation: none;
   }
 }

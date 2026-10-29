@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { PlayerQrCode, usePlayerQr } from "@/components/PlayerQr";
+import { IcebreakerModal } from "@/components/GameModals";
 import { ScanResultSummary } from "@/components/ScanResultSummary";
 import type { PlayerSession } from "@/lib/identity";
 import { submitScan } from "@/lib/scan-client";
 import { extractPlayerQrToken } from "@/lib/scan-utils";
 import type { ScanOutcome } from "@/lib/scan-types";
+import { useScanBackConfirmation } from "@/lib/use-scan-back-confirmation";
 
 export default function NativeScanPage() {
   const params = useParams<{ token: string }>();
@@ -18,6 +20,15 @@ export default function NativeScanPage() {
   const [sessionChecked, setSessionChecked] = useState(false);
   const [outcome, setOutcome] = useState<ScanOutcome | null>(null);
   const [now, setNow] = useState(Date.now());
+  const [icebreaker, setIcebreaker] = useState<{ name: string; question: string } | null>(null);
+
+  function showOutcome(next: ScanOutcome) {
+    setOutcome(next);
+    if (next.result === "confirmed") {
+      setIcebreaker({ name: next.other.name, question: next.icebreaker });
+      navigator.vibrate?.(65);
+    }
+  }
 
   useEffect(() => {
     const stored = localStorage.getItem("cmx:session");
@@ -36,7 +47,7 @@ export default function NativeScanPage() {
     const key = `${session.playerId}:${token}`;
     if (submittedKey.current === key) return;
     submittedKey.current = key;
-    void submitScan(token, session).then(setOutcome);
+    void submitScan(token, session).then(showOutcome);
   }, [session, sessionChecked, token]);
 
   useEffect(() => {
@@ -50,9 +61,17 @@ export default function NativeScanPage() {
     ? Math.max(0, Math.ceil((outcome.expiresAt - now) / 1000))
     : 0;
   const qr = usePlayerQr(session);
+  useScanBackConfirmation(session, outcome, showOutcome);
 
   return (
     <main className="page-shell">
+      {icebreaker && (
+        <IcebreakerModal
+          name={icebreaker.name}
+          onClose={() => setIcebreaker(null)}
+          question={icebreaker.question}
+        />
+      )}
       <header className="wordmark">
         <span className="brand-mark" aria-hidden="true">CM</span>
         <span>Critical Mixer</span>

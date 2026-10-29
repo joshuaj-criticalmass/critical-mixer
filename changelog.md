@@ -186,3 +186,13 @@ item should be committed and pushed separately.
   header in orange Compacta. Sessions now carry `firstName` (from join, name
   login, or the host login QR), falling back to the first word of the full
   name for older sessions. Previewed both states with mocked game status.
+- Icebreaker pop-up: when a meet is confirmed, the shared icebreaker opens
+  in a modal ("You met {name} · +1 point") that closes on "Got it", Escape,
+  or automatically after 30 seconds. The second scanner sees it immediately;
+  the first scanner's scan-back screen now checks `/api/met` every 4 seconds
+  (while visible, until the 10-minute window ends) and switches to
+  "You met {name}!" with the same pop-up when the scan-back lands. The
+  question no longer appears on the pending or confirmed cards, so the
+  pop-up is the reveal. How to play and the icebreaker now share one
+  `AutoCloseModal`. Both paths verified in the browser with mocked
+  responses (no data written); 28 tests, typecheck, and lint pass.

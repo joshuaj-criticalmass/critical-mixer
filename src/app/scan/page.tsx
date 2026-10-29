@@ -6,9 +6,11 @@ import { useEffect, useRef, useState } from "react";
 import type QrScanner from "qr-scanner";
 import type { PlayerSession } from "@/lib/identity";
 import { PlayerQrCode, usePlayerQr } from "@/components/PlayerQr";
+import { IcebreakerModal } from "@/components/GameModals";
 import { ScanResultSummary } from "@/components/ScanResultSummary";
 import { submitScan } from "@/lib/scan-client";
 import type { ScanOutcome } from "@/lib/scan-types";
+import { useScanBackConfirmation } from "@/lib/use-scan-back-confirmation";
 
 function cameraErrorMessage(error: unknown): string {
   const name = error instanceof DOMException ? error.name : "";
@@ -38,6 +40,13 @@ export default function ScanPage() {
   const [scanOutcome, setScanOutcome] = useState<ScanOutcome | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [now, setNow] = useState(Date.now());
+  const [icebreaker, setIcebreaker] = useState<{ name: string; question: string } | null>(null);
+
+  function celebrate(outcome: Extract<ScanOutcome, { result: "confirmed" }>) {
+    setScanOutcome(outcome);
+    setIcebreaker({ name: outcome.other.name, question: outcome.icebreaker });
+    navigator.vibrate?.(65);
+  }
 
   useEffect(() => {
     const stored = localStorage.getItem("cmx:session");
@@ -59,8 +68,8 @@ export default function ScanPage() {
 
     setIsSubmitting(true);
     const outcome = await submitScan(token, session);
-    setScanOutcome(outcome);
-    if (outcome.result === "confirmed") navigator.vibrate?.(65);
+    if (outcome.result === "confirmed") celebrate(outcome);
+    else setScanOutcome(outcome);
     setIsSubmitting(false);
     handlingScan.current = false;
   }
@@ -146,11 +155,19 @@ export default function ScanPage() {
     ? Math.max(0, Math.ceil((scanOutcome.expiresAt - now) / 1000))
     : 0;
   const qr = usePlayerQr(session);
+  useScanBackConfirmation(session, scanOutcome, celebrate);
   // After a first scan the other person needs *your* code, so it replaces the camera.
   const showMyCode = scanOutcome?.result === "pending";
 
   return (
     <main className="scanner-screen">
+      {icebreaker && (
+        <IcebreakerModal
+          name={icebreaker.name}
+          onClose={() => setIcebreaker(null)}
+          question={icebreaker.question}
+        />
+      )}
       <header className="scanner-header">
         <Link aria-label="Close scanner" className="scanner-close" href="/play">
           <span aria-hidden="true">×</span>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HowToPlay } from "@/components/HowToPlay";
-import { HowToPlayModal } from "@/components/HowToPlayModal";
+import { HowToPlayModal } from "@/components/GameModals";
 import { PlayerQrCode, rememberServerOffset, usePlayerQr } from "@/components/PlayerQr";
 import type { PlayerSession } from "@/lib/identity";
 
