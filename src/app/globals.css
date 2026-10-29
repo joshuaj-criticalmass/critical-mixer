@@ -151,10 +151,23 @@ body {
 
 .wordmark {
   justify-content: flex-start;
+  flex-wrap: wrap;
   gap: 1rem;
   padding-bottom: 1rem;
   font-size: 0.95rem;
   font-weight: 700;
+}
+
+.wordmark-player {
+  flex-basis: 100%;
+  margin: -0.35rem 0 0;
+  color: var(--color-primary);
+  font-family: var(--font-display), sans-serif;
+  font-size: 2.25rem;
+  font-weight: 400;
+  line-height: 0.9;
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
 }
 
 /* Official CM logo; the "CM" text in markup stays as a hidden fallback. */

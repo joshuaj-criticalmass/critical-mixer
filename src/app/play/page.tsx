@@ -166,6 +166,9 @@ export default function PlayPage() {
       <header className="wordmark">
         <span className="brand-mark" aria-hidden="true">CM</span>
         <span>Critical Mixer</span>
+        {session && (gameStatus === "active" || gameStatus === "ended") && (
+          <p className="wordmark-player">{session.name}</p>
+        )}
       </header>
       <section className="play-layout">
         {session && (
@@ -211,7 +214,9 @@ export default function PlayPage() {
             ) : (
               <>
             <div className="play-copy">
-              <h1>You're in, {session.name}.</h1>
+              {gameStatus !== "active" && (
+                <h1>Welcome, {session.firstName || session.name.split(" ")[0]}</h1>
+              )}
               <p className="intro-copy" aria-live="polite">{statusMessage}</p>
               {gameStatus === "active" ? (
                 <Link className="primary-button scan-link" href="/scan">

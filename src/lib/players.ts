@@ -75,7 +75,10 @@ export async function joinPlayer(parts: PlayerNameParts, allowSimilar: boolean):
     throw new PlayerServiceUnavailableError();
   }
 
-  return { result: "joined", session: await createPlayerSession(id, name, qrSecret) };
+  return {
+    result: "joined",
+    session: await createPlayerSession(id, name, qrSecret, parts.firstName),
+  };
 }
 
 export async function loginPlayerByName(name: string): Promise<PlayerSession | null> {
@@ -87,5 +90,6 @@ export async function loginPlayerByName(name: string): Promise<PlayerSession | n
     : findExactName(name, await loadPlayers());
 
   if (!match?.name) return null;
-  return createPlayerSession(match.id, match.name, qrSecret);
+  const firstName = await redis.hget<string>(playerKey(match.id), "firstName");
+  return createPlayerSession(match.id, match.name, qrSecret, firstName ?? undefined);
 }

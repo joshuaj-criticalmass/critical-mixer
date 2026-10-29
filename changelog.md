@@ -180,3 +180,9 @@ item should be committed and pushed separately.
   offset so the scan screens' codes stay in the server's 30-second window.
   Previewed with a mocked pending scan (no data written); 28 tests,
   typecheck, and lint pass.
+- `/play` greeting: before the game starts the heading is now "Welcome,
+  {first name}". Once the game is live (and after it ends) the big heading
+  is removed and the player's full name sits small under the Critical Mixer
+  header in orange Compacta. Sessions now carry `firstName` (from join, name
+  login, or the host login QR), falling back to the first word of the full
+  name for older sessions. Previewed both states with mocked game status.

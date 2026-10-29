@@ -4,7 +4,7 @@ import { getRedis, redisConfigured } from "@/lib/redis";
 
 export const runtime = "nodejs";
 
-type StoredPlayer = { name?: string };
+type StoredPlayer = { name?: string; firstName?: string };
 
 export async function POST(request: Request): Promise<Response> {
   const secret = process.env.QR_SECRET ?? "";
@@ -48,7 +48,7 @@ export async function POST(request: Request): Promise<Response> {
       return adminJson({ error: "This player account could not be found." }, 404);
     }
 
-    const session = await createPlayerSession(playerId, player.name, secret);
+    const session = await createPlayerSession(playerId, player.name, secret, player.firstName);
     return adminJson({ session }, 200);
   } catch {
     return adminJson({ error: "The game is temporarily unavailable." }, 503);

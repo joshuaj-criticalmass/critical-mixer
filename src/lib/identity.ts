@@ -11,6 +11,7 @@ export type PlayerSession = {
   playerKey: string;
   sessionSig: string;
   name: string;
+  firstName?: string;
 };
 
 export function normalizePlayerName(value: unknown): string | null {
@@ -79,12 +80,13 @@ export async function verifySessionSignature(
 export async function createPlayerSession(
   playerId: string,
   name: string,
-  secret: string
+  secret: string,
+  firstName?: string
 ): Promise<PlayerSession> {
   const [playerKey, sessionSig] = await Promise.all([
     hmacBase64Url(secret, playerId),
     hmacBase64Url(secret, `${playerId}:session`),
   ]);
 
-  return { playerId, playerKey, sessionSig, name };
+  return { playerId, playerKey, sessionSig, name, firstName: firstName || name.split(" ")[0] };
 }
