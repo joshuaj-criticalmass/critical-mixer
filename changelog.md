@@ -157,3 +157,9 @@ item should be committed and pushed separately.
   28 tests, typecheck, and lint pass. Join/login were checked against real
   playtest names using only requests that return "exists"/"similar" or log in;
   no players were created.
+- Admin: replaced the name search with a full player list (`GET
+  /api/admin/players`, admin key required). It shows every player's points,
+  meets, and join time, with a name filter, sort by points/name/newest, and
+  the one-time login QR on each row. Removed the unused search endpoint.
+  Note: a test player "Zzyzx Nobodyhere" was created in the shared database
+  during browser checks of the join form; it is removed by the next wipe.

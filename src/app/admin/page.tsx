@@ -1,7 +1,7 @@
 "use client";
 
 import QRCode from "qrcode";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 
 type AdminStatus = "lobby" | "active" | "ended";
 type AdminOverview = {
@@ -10,7 +10,8 @@ type AdminOverview = {
   meets: number;
   top3: { points: number; count: number; players: { id: string; name: string }[] }[];
 };
-type SearchPlayer = { id: string; name: string; points: number; createdAt: number };
+type RosterPlayer = { id: string; name: string; points: number; meetCount: number; createdAt: number };
+type RosterSort = "points" | "name" | "newest";
 type RecoveryLink = { name: string; url: string; expiresAt: number };
 
 async function adminRequest<T>(
@@ -36,8 +37,9 @@ export default function AdminPage() {
   const [adminKey, setAdminKey] = useState("");
   const [inputKey, setInputKey] = useState("");
   const [overview, setOverview] = useState<AdminOverview | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<SearchPlayer[]>([]);
+  const [roster, setRoster] = useState<RosterPlayer[] | null>(null);
+  const [rosterFilter, setRosterFilter] = useState("");
+  const [rosterSort, setRosterSort] = useState<RosterSort>("points");
   const [recoveryLink, setRecoveryLink] = useState<RecoveryLink | null>(null);
   const [qrData, setQrData] = useState("");
   const [wipeConfirmation, setWipeConfirmation] = useState("");
@@ -79,7 +81,35 @@ export default function AdminPage() {
       setOverview(null);
       setError(caught instanceof Error ? caught.message : "Couldn't load the host overview.");
     }
+    if (roster) await loadRoster(key);
   }
+
+  async function loadRoster(key = adminKey): Promise<void> {
+    if (!key) return;
+    setIsBusy(true);
+    try {
+      const result = await adminRequest<{ players: RosterPlayer[] }>(key, "/api/admin/players");
+      setRoster(result.players);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Couldn't load the player list.");
+    } finally {
+      setIsBusy(false);
+    }
+  }
+
+  const visibleRoster = useMemo(() => {
+    const query = rosterFilter.trim().toLocaleLowerCase("en-GB");
+    const filtered = (roster ?? []).filter((player) =>
+      !query || player.name.toLocaleLowerCase("en-GB").includes(query)
+    );
+    return filtered.sort((left, right) =>
+      rosterSort === "name"
+        ? left.name.localeCompare(right.name, "en-GB")
+        : rosterSort === "newest"
+          ? right.createdAt - left.createdAt
+          : right.points - left.points || left.name.localeCompare(right.name, "en-GB")
+    );
+  }, [roster, rosterFilter, rosterSort]);
 
   useEffect(() => {
     if (!adminKey) return;
@@ -121,7 +151,7 @@ export default function AdminPage() {
     sessionStorage.removeItem("cmx:admin-key");
     setAdminKey("");
     setOverview(null);
-    setSearchResults([]);
+    setRoster(null);
     setRecoveryLink(null);
     setMessage("");
     setError("");
@@ -145,30 +175,6 @@ export default function AdminPage() {
       setMessage(status === "active" ? "Game started." : "Game ended.");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Couldn't update game status.");
-    } finally {
-      setIsBusy(false);
-    }
-  }
-
-  async function searchPlayers(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError("");
-    setMessage("");
-    setRecoveryLink(null);
-    if (searchQuery.trim().length < 2) {
-      setSearchResults([]);
-      return;
-    }
-
-    setIsBusy(true);
-    try {
-      const result = await adminRequest<{ players: SearchPlayer[] }>(
-        adminKey,
-        `/api/admin/search?q=${encodeURIComponent(searchQuery.trim())}`
-      );
-      setSearchResults(result.players);
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Search failed.");
     } finally {
       setIsBusy(false);
     }
@@ -201,7 +207,7 @@ export default function AdminPage() {
         body: JSON.stringify({ confirm: wipeConfirmation }),
       });
       setOverview(null);
-      setSearchResults([]);
+      setRoster(null);
       setRecoveryLink(null);
       setWipeConfirmation("");
       setMessage(`Deleted ${result.deleted} Critical Mixer keys.`);
@@ -304,33 +310,68 @@ export default function AdminPage() {
           </section>
 
           <section className="admin-section" aria-labelledby="recovery-title">
-            <div><p className="eyebrow">Player recovery</p><h2 id="recovery-title">Find a player</h2></div>
-            <form className="admin-search" onSubmit={searchPlayers}>
-              <label className="field-group">
-                <span className="field-label">Search by name</span>
-                <input
-                  className="text-input"
-                  minLength={2}
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  value={searchQuery}
-                />
-              </label>
-              <button className="secondary-button" disabled={isBusy || searchQuery.trim().length < 2} type="submit">Search</button>
-            </form>
-            {searchResults.length > 0 && (
-              <ul className="admin-player-list">
-                {searchResults.map((player) => (
-                  <li key={player.id}>
-                    <div>
-                      <strong>{player.name}</strong>
-                      <span>{player.points} pts · joined {new Date(player.createdAt).toLocaleDateString("en-GB")}</span>
-                    </div>
-                    <button className="secondary-button" disabled={isBusy} onClick={() => void generateRecoveryLink(player.id)} type="button">
-                      Generate login QR
-                    </button>
-                  </li>
-                ))}
-              </ul>
+            <div className="admin-section-heading">
+              <div>
+                <p className="eyebrow">Everyone playing</p>
+                <h2 id="recovery-title">
+                  Players{roster ? ` (${roster.length})` : ""}
+                </h2>
+              </div>
+              <button className="secondary-button" disabled={isBusy} onClick={() => void loadRoster()} type="button">
+                {roster ? "Refresh list" : "Show all players"}
+              </button>
+            </div>
+            {roster && (
+              <>
+                <div className="admin-search">
+                  <label className="field-group">
+                    <span className="field-label">Filter by name</span>
+                    <input
+                      className="text-input"
+                      onChange={(event) => setRosterFilter(event.target.value)}
+                      value={rosterFilter}
+                    />
+                  </label>
+                  <label className="field-group admin-sort">
+                    <span className="field-label">Sort by</span>
+                    <select
+                      className="text-input select-input"
+                      onChange={(event) => setRosterSort(event.target.value as RosterSort)}
+                      value={rosterSort}
+                    >
+                      <option value="points">Points</option>
+                      <option value="name">Name</option>
+                      <option value="newest">Newest</option>
+                    </select>
+                  </label>
+                </div>
+                {visibleRoster.length === 0 ? (
+                  <p className="home-muted">
+                    {roster.length === 0 ? "No one has joined yet." : "No players match that name."}
+                  </p>
+                ) : (
+                  <ul className="admin-player-list">
+                    {visibleRoster.map((player) => (
+                      <li key={player.id}>
+                        <div>
+                          <strong>{player.name}</strong>
+                          <span>
+                            {player.points} {player.points === 1 ? "pt" : "pts"} · {player.meetCount} met · joined{" "}
+                            {new Date(player.createdAt).toLocaleString("en-GB", {
+                              weekday: "short",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
+                        </div>
+                        <button className="secondary-button" disabled={isBusy} onClick={() => void generateRecoveryLink(player.id)} type="button">
+                          Generate login QR
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
             )}
             {recoveryLink && qrData && (
               <div className="recovery-qr-panel">

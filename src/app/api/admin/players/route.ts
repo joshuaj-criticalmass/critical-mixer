@@ -12,28 +12,25 @@ export async function GET(request: Request): Promise<Response> {
     return adminJson({ error: "The game is not ready yet." }, 503);
   }
 
-  const query = new URL(request.url).searchParams.get("q")?.trim().toLocaleLowerCase("en-GB") ?? "";
-  if (query.length < 2) return adminJson({ players: [] }, 200);
-
   try {
     const redis = getRedis();
     const names = (await redis.hgetall<Record<string, string>>("cmx:names")) ?? {};
-    const matches = Object.entries(names)
-      .map(([id, rawName]) => ({ id, name: normalizeStoredPlayerName(rawName) }))
-      .filter((player): player is { id: string; name: string } => Boolean(player.name?.toLocaleLowerCase("en-GB").includes(query)))
-      .slice(0, 20);
-
-    if (matches.length === 0) return adminJson({ players: [] }, 200);
+    const roster = Object.entries(names).flatMap(([id, rawName]) => {
+      const name = normalizeStoredPlayerName(rawName);
+      return name ? [{ id, name }] : [];
+    });
+    if (roster.length === 0) return adminJson({ players: [] }, 200);
 
     const pipeline = redis.pipeline();
-    for (const player of matches) {
-      pipeline.hmget<Record<string, unknown>>(`cmx:player:${player.id}`, "points", "createdAt");
+    for (const player of roster) {
+      pipeline.hmget<Record<string, unknown>>(`cmx:player:${player.id}`, "points", "meetCount", "createdAt");
     }
     const records = await pipeline.exec();
-    const players = matches.map((player, index) => ({
+    const players = roster.map((player, index) => ({
       ...player,
       points: Number(readHashField(records[index], "points", 0) ?? 0),
-      createdAt: Number(readHashField(records[index], "createdAt", 1) ?? 0),
+      meetCount: Number(readHashField(records[index], "meetCount", 1) ?? 0),
+      createdAt: Number(readHashField(records[index], "createdAt", 2) ?? 0),
     }));
 
     return adminJson({ players }, 200);
