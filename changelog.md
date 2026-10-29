@@ -130,3 +130,10 @@ item should be committed and pushed separately.
   beside the chart and the board still fits a 1080p display.
 - Two new name tests (26 total), typecheck, and lint pass. Join/recover
   validation was checked with rejected requests only; no data was written.
+
+## 2026-10-29
+
+- Deployed `f2293aa` to production. `/`, `/rules`, `/live`, `/recover`, and
+  `/play` respond, and the first/last name validation is live. `/rules`
+  briefly returned a stale edge-cached 404 right after the alias switched;
+  it cleared on its own without a cache purge.
