@@ -164,4 +164,4 @@ item should be committed and pushed separately.
   Note: a test player "Zzyzx Nobodyhere" was created in the shared database
   during browser checks of the join form; it is removed by the next wipe.
 - Join screen copy: split the tagline onto two lines and added the game
-  explanation with the Tuesday 3/11, 10am start.
+  explanation with the Tuesday 3 November, 10am start.
