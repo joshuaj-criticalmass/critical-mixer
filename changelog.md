@@ -212,3 +212,6 @@ item should be committed and pushed separately.
   view is now hidden for every result and only returns when the player taps
   "Scan another".
 - Icebreakers: updated the question list (now 46 questions).
+- Deployed `4795902` to production (scanner camera fix and icebreaker list).
+  Tests, typecheck, and build passed first; `/`, `/play`, `/scan`, `/live`,
+  and `/rules` respond.
