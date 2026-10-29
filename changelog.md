@@ -203,3 +203,7 @@ item should be committed and pushed separately.
   plurals ("1 pt", "1 person met") across `/play`.
 - Design: removed the orange dot at the guide-line intersection from all
   page backgrounds; the dashed guides remain.
+- Deployed `26e931b` to production. All pages respond; join rejects a
+  missing last name, login returns "not found" for an unknown name, the
+  admin player list requires the key (401), `/recover` redirects, and the
+  old `/api/recover` is gone (404). Smoke tests created no players.
