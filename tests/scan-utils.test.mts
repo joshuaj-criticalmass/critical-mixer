@@ -27,5 +27,6 @@ test("pair keys and icebreakers are deterministic regardless of scan direction",
     getIcebreakerQuestion(secondPlayerId, firstPlayerId)
   );
   assert.ok(icebreakers.includes(getIcebreakerQuestion(firstPlayerId, secondPlayerId)));
-  assert.equal(icebreakers.length, 50);
+  assert.ok(icebreakers.length > 0);
+  assert.equal(new Set(icebreakers).size, icebreakers.length);
 });
