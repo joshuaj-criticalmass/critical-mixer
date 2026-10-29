@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import QRCode from "qrcode";
 import { HowToPlay } from "@/components/HowToPlay";
+import { HowToPlayModal } from "@/components/HowToPlayModal";
 import type { PlayerSession } from "@/lib/identity";
 import {
   createPlayerQrToken,
@@ -40,6 +41,14 @@ export default function PlayPage() {
   const [metLoaded, setMetLoaded] = useState(false);
   const [metLoading, setMetLoading] = useState(false);
   const [metError, setMetError] = useState("");
+  const [showHowToPlay, setShowHowToPlay] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("cmx:show-how-to-play")) {
+      sessionStorage.removeItem("cmx:show-how-to-play");
+      setShowHowToPlay(true);
+    }
+  }, []);
 
   useEffect(() => {
     const stored = localStorage.getItem("cmx:session");
@@ -198,6 +207,7 @@ export default function PlayPage() {
 
   return (
     <main className="page-shell poppy-shell">
+      {showHowToPlay && <HowToPlayModal onClose={() => setShowHowToPlay(false)} />}
       <header className="wordmark">
         <span className="brand-mark" aria-hidden="true">CM</span>
         <span>Critical Mixer</span>

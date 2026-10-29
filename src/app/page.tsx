@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { HowToPlay } from "@/components/HowToPlay";
 import type { PlayerSession } from "@/lib/identity";
 import { extractPlayerQrToken } from "@/lib/scan-utils";
 
@@ -48,8 +47,10 @@ export default function Home() {
     setIsInAppBrowser(/Teams|Slack|FBAN|FBAV|Instagram|LinkedInApp/i.test(navigator.userAgent));
   }, [router]);
 
-  function startGame(session: PlayerSession) {
+  function startGame(session: PlayerSession, isNewPlayer: boolean) {
     localStorage.setItem("cmx:session", JSON.stringify(session));
+    // Shown once on the next screen; a refresh won't bring it back.
+    if (isNewPlayer) sessionStorage.setItem("cmx:show-how-to-play", "1");
     router.push(gameDestination());
   }
 
@@ -66,7 +67,7 @@ export default function Home() {
       const result = (await response.json()) as JoinResponse;
 
       if (result.result === "joined" && result.session) {
-        startGame(result.session);
+        startGame(result.session, true);
         return;
       }
       if (result.result === "exists" && result.name) {
@@ -99,7 +100,7 @@ export default function Home() {
       if (!response.ok || !result.session) {
         throw new Error(result.error ?? "We couldn't log you in.");
       }
-      startGame(result.session);
+      startGame(result.session, false);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Please try again.");
       setIsSubmitting(false);
@@ -146,10 +147,6 @@ export default function Home() {
             Critical Mixer is a game that rewards meeting your new coworkers. Enter your name
             to log in, and the game will start Tuesday 3 November at 10am!
           </p>
-          <section className="how-to-play-section" aria-labelledby="how-to-play-heading">
-            <h2 id="how-to-play-heading" className="eyebrow">How to play</h2>
-            <HowToPlay />
-          </section>
         </div>
         <div className="form-panel">
           {prompt?.kind === "exists" ? (
@@ -256,7 +253,7 @@ export default function Home() {
               )}
               {error && <p className="error-message" role="alert">{error}</p>}
               <button className="primary-button" disabled={isSubmitting} type="submit">
-                {isSubmitting ? "Joining…" : "Join Critical Mixer"}
+                {isSubmitting ? "Joining…" : "Join"}
               </button>
             </form>
           )}
