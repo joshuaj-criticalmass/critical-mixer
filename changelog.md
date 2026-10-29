@@ -170,3 +170,13 @@ item should be committed and pushed separately.
   automatically after 30 seconds, and doesn't return on refresh or for
   players logging back in. The join button now reads "Join". Verified the
   open, countdown, auto-close, and no-repeat behaviour in the browser.
+- Playtest fix: after a first scan, the scanner showed a frozen black camera
+  box. The "scan you back" screen now hides the camera and shows the
+  player's own live QR code large at the top (up to 26rem, capped at about
+  half the screen height), above the countdown and icebreaker. The
+  native-camera page (`/m/[token]`) does the same and drops its intro header.
+  The rotating QR is now a shared component used by `/play` and both scan
+  screens, rendered at 640px for sharpness; `/play` stores its server clock
+  offset so the scan screens' codes stay in the server's 30-second window.
+  Previewed with a mocked pending scan (no data written); 28 tests,
+  typecheck, and lint pass.

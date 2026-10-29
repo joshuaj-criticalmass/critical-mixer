@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { PlayerQrCode, usePlayerQr } from "@/components/PlayerQr";
 import { ScanResultSummary } from "@/components/ScanResultSummary";
 import type { PlayerSession } from "@/lib/identity";
 import { submitScan } from "@/lib/scan-client";
@@ -48,6 +49,7 @@ export default function NativeScanPage() {
   const secondsLeft = outcome?.result === "pending"
     ? Math.max(0, Math.ceil((outcome.expiresAt - now) / 1000))
     : 0;
+  const qr = usePlayerQr(session);
 
   return (
     <main className="page-shell">
@@ -56,15 +58,17 @@ export default function NativeScanPage() {
         <span>Critical Mixer</span>
       </header>
       <section className="form-layout" aria-live="polite">
-        <div className="intro form-intro">
-          <p className="eyebrow">A new connection</p>
-          <h1>Critical Mixer</h1>
-          <p className="intro-copy">
-            {session
-              ? "Your scan will be sent automatically."
-              : "Join the game, or enter your name again if you're already playing, to complete this scan."}
-          </p>
-        </div>
+        {outcome?.result !== "pending" && (
+          <div className="intro form-intro">
+            <p className="eyebrow">A new connection</p>
+            <h1>Critical Mixer</h1>
+            <p className="intro-copy">
+              {session
+                ? "Your scan will be sent automatically."
+                : "Join the game, or enter your name again if you're already playing, to complete this scan."}
+            </p>
+          </div>
+        )}
         <div className="form-panel recovery-panel">
           {!token ? (
             <p className="error-message" role="alert">This Critical Mixer link is invalid.</p>
@@ -77,10 +81,15 @@ export default function NativeScanPage() {
               </Link>
             </>
           ) : outcome ? (
-            <section className={`scan-result scan-result-${outcome.result}`}>
-              <ScanResultSummary outcome={outcome} secondsLeft={secondsLeft} />
-              <Link className="secondary-link" href="/play">Back to game</Link>
-            </section>
+            <>
+              {outcome.result === "pending" && (
+                <PlayerQrCode className="qr-panel-hero" name={session.name} qr={qr} />
+              )}
+              <section className={`scan-result scan-result-${outcome.result}`}>
+                <ScanResultSummary outcome={outcome} secondsLeft={secondsLeft} />
+                <Link className="secondary-link" href="/play">Back to game</Link>
+              </section>
+            </>
           ) : (
             <p className="privacy-note">Sending your scan…</p>
           )}

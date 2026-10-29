@@ -3,16 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import QRCode from "qrcode";
 import { HowToPlay } from "@/components/HowToPlay";
 import { HowToPlayModal } from "@/components/HowToPlayModal";
+import { PlayerQrCode, rememberServerOffset, usePlayerQr } from "@/components/PlayerQr";
 import type { PlayerSession } from "@/lib/identity";
-import {
-  createPlayerQrToken,
-  QR_CODE_DARK,
-  QR_CODE_LIGHT,
-  QR_WINDOW_MS,
-} from "@/lib/rotating-qr";
 
 type GameStatus = "loading" | "unavailable" | "lobby" | "active" | "ended";
 type PlayerTotals = { points: number; meetCount: number };
@@ -31,8 +25,6 @@ export default function PlayPage() {
   const [session, setSession] = useState<PlayerSession | null>(null);
   const [gameStatus, setGameStatus] = useState<GameStatus>("loading");
   const [serverOffset, setServerOffset] = useState(0);
-  const [currentTime, setCurrentTime] = useState(Date.now());
-  const [qrImage, setQrImage] = useState("");
   const [playerTotals, setPlayerTotals] = useState<PlayerTotals>({ points: 0, meetCount: 0 });
   const [top3, setTop3] = useState<LeaderboardTier[]>([]);
   const [winners, setWinners] = useState<Winner[]>([]);
@@ -99,7 +91,9 @@ export default function PlayPage() {
         };
         const requestFinishedAt = Date.now();
         if (isMounted) {
-          setServerOffset(result.serverTime - (requestStartedAt + requestFinishedAt) / 2);
+          const offset = result.serverTime - (requestStartedAt + requestFinishedAt) / 2;
+          setServerOffset(offset);
+          rememberServerOffset(offset);
           setGameStatus(result.status);
           setPlayerTotals(result.me);
           setTop3(result.top3);
@@ -127,47 +121,8 @@ export default function PlayPage() {
     };
   }, [router, session]);
 
-  useEffect(() => {
-    const interval = window.setInterval(() => setCurrentTime(Date.now()), 500);
-    return () => window.clearInterval(interval);
-  }, []);
-
-  const adjustedTime = currentTime + serverOffset;
-  const currentWindow = Math.floor(adjustedTime / QR_WINDOW_MS);
-  const elapsedInWindow = ((adjustedTime % QR_WINDOW_MS) + QR_WINDOW_MS) % QR_WINDOW_MS;
-  const remainingMs = QR_WINDOW_MS - elapsedInWindow;
-  const remainingSeconds = Math.ceil(remainingMs / 1000);
-  const progress = (remainingMs / QR_WINDOW_MS) * 100;
-
-  useEffect(() => {
-    if (!session) return;
-    let cancelled = false;
-
-    async function renderQrCode() {
-      try {
-        const token = await createPlayerQrToken(
-          session!.playerId,
-          session!.playerKey,
-          currentWindow * QR_WINDOW_MS
-        );
-        const url = `${window.location.origin}/m/${token}`;
-        const image = await QRCode.toDataURL(url, {
-          errorCorrectionLevel: "M",
-          margin: 4,
-          width: 280,
-          color: { dark: QR_CODE_DARK, light: QR_CODE_LIGHT },
-        });
-        if (!cancelled) setQrImage(image);
-      } catch {
-        if (!cancelled) setQrImage("");
-      }
-    }
-
-    void renderQrCode();
-    return () => {
-      cancelled = true;
-    };
-  }, [currentWindow, session]);
+  const qr = usePlayerQr(session, serverOffset);
+  const adjustedTime = qr.adjustedTime;
 
   const statusMessage = gameStatus === "active"
     ? "Your code is live. Hold it up for someone to scan."
@@ -275,24 +230,12 @@ export default function PlayPage() {
                 </Link>
               </details>
             </div>
-            <div className="qr-panel">
-              <div
-                className="qr-ring"
-                style={{ background: `conic-gradient(var(--color-primary) ${progress}%, var(--color-slate) 0)` }}
-              >
-                <div className={`qr-frame ${gameStatus === "active" ? "" : "qr-frame-inactive"}`}>
-                  {qrImage ? (
-                    <img className="qr-image" src={qrImage} alt={`Live QR code for ${session.name}`} />
-                  ) : (
-                    <span className="qr-placeholder">Loading code</span>
-                  )}
-                  {gameStatus !== "active" && <span className="qr-overlay">{statusMessage}</span>}
-                </div>
-              </div>
-              <p className="qr-timer" aria-label={`Code refreshes in ${remainingSeconds} seconds`}>
-                Refreshes in {remainingSeconds}s
-              </p>
-            </div>
+            <PlayerQrCode
+              inactive={gameStatus !== "active"}
+              name={session.name}
+              overlay={gameStatus !== "active" ? statusMessage : undefined}
+              qr={qr}
+            />
             <section className="home-data-grid" aria-label="Your game progress">
               <section className="home-group" aria-labelledby="score-heading">
                 <h2 id="score-heading">Your score</h2>

@@ -651,6 +651,25 @@ body {
   font-size: 0.875rem;
 }
 
+/* Scan-back view: the player's own code as large as the screen allows. */
+.qr-panel-hero .qr-ring {
+  width: min(100%, 26rem, 52dvh);
+  padding: 0.4rem;
+}
+
+.scanner-content-my-code {
+  align-content: start;
+}
+
+/* Both rows size to content (and the screen scrolls) so the result never overlaps the code. */
+.scanner-content.scanner-content-my-code {
+  grid-template-rows: auto auto;
+}
+
+.scanner-view[hidden] {
+  display: none;
+}
+
 .recovery-details {
   display: grid;
   width: min(100%, 24rem);

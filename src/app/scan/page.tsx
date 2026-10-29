@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type QrScanner from "qr-scanner";
 import type { PlayerSession } from "@/lib/identity";
+import { PlayerQrCode, usePlayerQr } from "@/components/PlayerQr";
 import { ScanResultSummary } from "@/components/ScanResultSummary";
 import { submitScan } from "@/lib/scan-client";
 import type { ScanOutcome } from "@/lib/scan-types";
@@ -144,6 +145,9 @@ export default function ScanPage() {
   const secondsLeft = scanOutcome?.result === "pending"
     ? Math.max(0, Math.ceil((scanOutcome.expiresAt - now) / 1000))
     : 0;
+  const qr = usePlayerQr(session);
+  // After a first scan the other person needs *your* code, so it replaces the camera.
+  const showMyCode = scanOutcome?.result === "pending";
 
   return (
     <main className="scanner-screen">
@@ -155,14 +159,18 @@ export default function ScanPage() {
         <span className="brand-mark" aria-hidden="true">CM</span>
       </header>
 
-      <section className="scanner-content" aria-live="polite">
-        <div className="scanner-view">
+      <section className={`scanner-content${showMyCode ? " scanner-content-my-code" : ""}`} aria-live="polite">
+        <div className="scanner-view" hidden={showMyCode}>
           <video aria-label="Camera viewfinder" autoPlay muted playsInline ref={videoRef} />
           {!scanOutcome && cameraMessage && (
             <p className="scanner-message">{cameraMessage}</p>
           )}
           {isSubmitting && <p className="scanner-message">Checking that code…</p>}
         </div>
+
+        {showMyCode && session && (
+          <PlayerQrCode className="qr-panel-hero" name={session.name} qr={qr} />
+        )}
 
         {scanOutcome && (
           <section className={`scan-result scan-result-${scanOutcome.result}`}>
