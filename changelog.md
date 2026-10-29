@@ -196,3 +196,8 @@ item should be committed and pushed separately.
   pop-up is the reveal. How to play and the icebreaker now share one
   `AutoCloseModal`. Both paths verified in the browser with mocked
   responses (no data written); 28 tests, typecheck, and lint pass.
+- Playtest fix: on the final results screen, the generic leaderboard grid
+  overrode the tier layout, squeezing the points column to a few pixels so
+  "2 pts" overlapped a long list of tied names. Each tier now shows place
+  and points on one line with the names wrapped underneath. Also fixed
+  plurals ("1 pt", "1 person met") across `/play`.

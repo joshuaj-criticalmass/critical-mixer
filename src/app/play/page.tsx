@@ -20,6 +20,9 @@ type PendingScan = { id: string; name: string; scannedAt: number };
 type MetPerson = { id: string; name: string; metAt: number };
 const POLL_MS = 30_000;
 
+const formatPoints = (points: number) => `${points} ${points === 1 ? "pt" : "pts"}`;
+const formatPeopleMet = (count: number) => `${count} ${count === 1 ? "person" : "people"} met`;
+
 export default function PlayPage() {
   const router = useRouter();
   const [session, setSession] = useState<PlayerSession | null>(null);
@@ -186,7 +189,7 @@ export default function PlayPage() {
                   {winners.map((winner, index) => (
                     <div className="winner-row" key={`${winner.name}-${index}`}>
                       <strong>{winner.name}</strong>
-                      <span>{winner.points} pts</span>
+                      <span>{formatPoints(winner.points)}</span>
                     </div>
                   ))}
                   {winners.length === 0 && <p className="home-muted">Results are not available yet.</p>}
@@ -198,7 +201,7 @@ export default function PlayPage() {
                       {top3.map((tier, index) => (
                         <li className="leaderboard-item leaderboard-final-tier" key={tier.points}>
                           <span>{index + 1}{index === 0 ? "st" : index === 1 ? "nd" : "rd"}</span>
-                          <strong>{tier.points} pts</strong>
+                          <strong>{formatPoints(tier.points)}</strong>
                           <span>{tier.players?.map((player) => player.name).join(", ")}</span>
                         </li>
                       ))}
@@ -207,7 +210,7 @@ export default function PlayPage() {
                   <section className="home-group" aria-labelledby="final-stats-heading">
                     <h2 id="final-stats-heading">Your final stats</h2>
                     <p className="score-total">{playerTotals.points}</p>
-                    <p>{playerTotals.meetCount} people met</p>
+                    <p>{formatPeopleMet(playerTotals.meetCount)}</p>
                   </section>
                 </div>
               </section>
@@ -245,7 +248,7 @@ export default function PlayPage() {
               <section className="home-group" aria-labelledby="score-heading">
                 <h2 id="score-heading">Your score</h2>
                 <p className="score-total">{playerTotals.points}</p>
-                <p>{playerTotals.meetCount} people met</p>
+                <p>{formatPeopleMet(playerTotals.meetCount)}</p>
               </section>
 
               <section className="home-group" aria-labelledby="pending-heading" aria-live="polite">
@@ -280,7 +283,7 @@ export default function PlayPage() {
                       <li className="leaderboard-item" key={tier.points}>
                         <span>{index + 1}{index === 0 ? "st" : index === 1 ? "nd" : "rd"}</span>
                         <span>{tier.count} {tier.count === 1 ? "player" : "players"}</span>
-                        <strong>{tier.points} pts</strong>
+                        <strong>{formatPoints(tier.points)}</strong>
                       </li>
                     ))}
                   </ol>
