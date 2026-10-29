@@ -207,3 +207,8 @@ item should be committed and pushed separately.
   missing last name, login returns "not found" for an unknown name, the
   admin player list requires the key (401), `/recover` redirects, and the
   old `/api/recover` is gone (404). Smoke tests created no players.
+- Playtest fix: the scanner's black camera box stayed on screen after a
+  confirmed meet (and after "already met" or error results). The camera
+  view is now hidden for every result and only returns when the player taps
+  "Scan another".
+- Icebreakers: updated the question list (now 46 questions).

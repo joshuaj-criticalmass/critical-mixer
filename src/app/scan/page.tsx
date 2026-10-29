@@ -156,7 +156,8 @@ export default function ScanPage() {
     : 0;
   const qr = usePlayerQr(session);
   useScanBackConfirmation(session, scanOutcome, celebrate);
-  // After a first scan the other person needs *your* code, so it replaces the camera.
+  // The camera stays off after any result until the player taps "Scan another".
+  const showCamera = !scanOutcome;
   const showMyCode = scanOutcome?.result === "pending";
 
   return (
@@ -176,8 +177,8 @@ export default function ScanPage() {
         <span className="brand-mark" aria-hidden="true">CM</span>
       </header>
 
-      <section className={`scanner-content${showMyCode ? " scanner-content-my-code" : ""}`} aria-live="polite">
-        <div className="scanner-view" hidden={showMyCode}>
+      <section className={`scanner-content${showCamera ? "" : " scanner-content-result"}`} aria-live="polite">
+        <div className="scanner-view" hidden={!showCamera}>
           <video aria-label="Camera viewfinder" autoPlay muted playsInline ref={videoRef} />
           {!scanOutcome && cameraMessage && (
             <p className="scanner-message">{cameraMessage}</p>

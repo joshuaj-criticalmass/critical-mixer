@@ -669,12 +669,12 @@ body {
   padding: 0.4rem;
 }
 
-.scanner-content-my-code {
+.scanner-content-result {
   align-content: start;
 }
 
 /* Both rows size to content (and the screen scrolls) so the result never overlaps the code. */
-.scanner-content.scanner-content-my-code {
+.scanner-content.scanner-content-result {
   grid-template-rows: auto auto;
 }
 
