@@ -39,7 +39,7 @@ export async function GET(request: Request): Promise<Response> {
     const now = Date.now();
     const playerKey = `cmx:player:${playerId}`;
     const pendingKey = `cmx:pending:${playerId}`;
-    const [publicValue, playerValues, pendingValues] = await redis
+    const [publicValue, playerValues, pendingValues, playerExists] = await redis
       .pipeline()
       .get<PublicState>("cmx:public")
       .hmget<Record<string, unknown>>(playerKey, "points", "meetCount")
@@ -49,7 +49,13 @@ export async function GET(request: Request): Promise<Response> {
         "+inf",
         { byScore: true, withScores: true }
       )
+      .exists(playerKey)
       .exec();
+
+    // A valid signature for a wiped player: tell the client to drop its session.
+    if (!playerExists) {
+      return json({ error: "This game has been reset. Join again to play." }, 410);
+    }
 
     const publicState = typeof publicValue === "string"
       ? (JSON.parse(publicValue) as PublicState)

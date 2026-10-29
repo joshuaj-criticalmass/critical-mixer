@@ -73,6 +73,11 @@ export default function PlayPage() {
           },
           cache: "no-store",
         });
+        if (response.status === 410) {
+          localStorage.removeItem("cmx:session");
+          router.replace("/");
+          return;
+        }
         if (!response.ok) throw new Error("Game status unavailable");
 
         const result = (await response.json()) as {
@@ -111,7 +116,7 @@ export default function PlayPage() {
       window.clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, [session]);
+  }, [router, session]);
 
   useEffect(() => {
     const interval = window.setInterval(() => setCurrentTime(Date.now()), 500);

@@ -137,3 +137,8 @@ item should be committed and pushed separately.
   `/play` respond, and the first/last name validation is live. `/rules`
   briefly returned a stale edge-cached 404 right after the alias switched;
   it cleared on its own without a cache purge.
+- Fix: after an admin wipe, players' saved sessions still signed correctly,
+  so `/play` kept showing their old name with zero points. `/api/me` now
+  returns 410 when the player record no longer exists, and `/play` clears the
+  stored session and returns to the join screen. Verified locally with a
+  signed session for a non-existent player (410) and a bad signature (401).
