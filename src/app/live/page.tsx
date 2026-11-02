@@ -119,7 +119,11 @@ export default function LivePage() {
         <li>Scan each other&apos;s codes to score.</li>
         <li>1 point for each new person you meet.</li>
         <li>You both have to scan within 10 minutes.</li>
-        <li>Most points by Thursday 5 November wins. Ties all win.</li>
+        <li>
+          Most points by Thursday 5 November wins.
+          <br />
+          Ties all win.
+        </li>
       </ul>
       {!screenMode && (
         <Link className="secondary-link" href="/rules">
