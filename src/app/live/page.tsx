@@ -21,7 +21,7 @@ const HEADLINES: Record<LiveStatus, string> = {
 };
 
 const STATUS_LABELS: Record<LiveStatus | "offline", string> = {
-  lobby: "Starts soon",
+  lobby: "Game starts at 10am",
   active: "Live",
   ended: "Final",
   offline: "Reconnecting",
