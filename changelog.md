@@ -215,3 +215,13 @@ item should be committed and pushed separately.
 - Deployed `4795902` to production (scanner camera fix and icebreaker list).
   Tests, typecheck, and build passed first; `/`, `/play`, `/scan`, `/live`,
   and `/rules` respond.
+
+## 2026-11-02
+
+- Live big screen (`/live?screen`) layout rework, look unchanged: left
+  column holds the meet count above meets-per-hour; the middle column's
+  "Top scorers" panel (renamed from "Top 3 scores") fills its cell above the
+  rules; the right column's join panel sits low with "Scan to start
+  playing!" above a larger QR (~410px at 1080p), letting Poppy's head show
+  above it. The side gutter that kept content off Poppy is removed in screen
+  mode. Measured at 1920x1080: fits exactly with no scrolling.

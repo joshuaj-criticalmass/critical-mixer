@@ -32,7 +32,6 @@ export default function LivePage() {
   const [snapshot, setSnapshot] = useState<LiveSnapshot | null>(null);
   const [offline, setOffline] = useState(false);
   const [joinQr, setJoinQr] = useState("");
-  const [joinHost, setJoinHost] = useState("");
 
   useEffect(() => {
     setScreenMode(new URLSearchParams(window.location.search).has("screen"));
@@ -72,11 +71,10 @@ export default function LivePage() {
   useEffect(() => {
     if (!screenMode) return;
     let cancelled = false;
-    setJoinHost(window.location.host);
     QRCode.toDataURL(window.location.origin, {
       errorCorrectionLevel: "M",
       margin: 2,
-      width: 480,
+      width: 720,
       color: { dark: QR_CODE_DARK, light: QR_CODE_LIGHT },
     })
       .then((image) => !cancelled && setJoinQr(image))
@@ -150,7 +148,7 @@ export default function LivePage() {
         </div>
 
         <section className="live-board" aria-labelledby="live-board-heading">
-          <h2 id="live-board-heading">Top 3 scores</h2>
+          <h2 id="live-board-heading">Top scorers</h2>
           {top3.length === 0 ? (
             <p className="home-muted">Scores appear after the first meet.</p>
           ) : (
@@ -194,9 +192,8 @@ export default function LivePage() {
 
         {screenMode ? (
           <aside className="live-join" aria-label="Join Critical Mixer">
+            <p className="live-join-title">Scan to start playing!</p>
             {joinQr && <img src={joinQr} alt="QR code to join Critical Mixer" />}
-            <p className="live-join-title">Scan to join</p>
-            <p className="home-muted">{joinHost}</p>
           </aside>
         ) : (
           <Link className="secondary-link live-back" href="/play">

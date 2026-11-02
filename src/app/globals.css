@@ -1880,11 +1880,39 @@ html:has(.live-screen) {
     width: 100%;
     grid-template-areas:
       "hero board join"
-      "activity rules rules";
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.7fr);
+      "activity rules join";
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 0.95fr);
   }
 
   .live-join { grid-area: join; }
+
+  /* Board fills its cell; the join panel sits low so Poppy's head shows above it. */
+  .live-screen .live-board {
+    align-self: stretch;
+  }
+
+  .live-screen .live-join {
+    align-self: end;
+    align-content: start;
+    justify-items: start;
+    gap: 1.25rem;
+    min-height: 75%;
+    padding: 1.5rem;
+    text-align: left;
+  }
+
+  .live-screen .live-join img {
+    width: 100%;
+  }
+
+  .live-screen .live-join-title {
+    font-size: 2.6rem;
+  }
+
+  /* The board layout overlaps Poppy by design, so drop the side gutter. */
+  .poppy-shell.live-screen {
+    padding-right: 2rem;
+  }
 
   .live-screen .live-rules ul {
     grid-template-columns: repeat(2, minmax(0, 1fr));
