@@ -81,6 +81,21 @@ export default function RulesPage() {
           </ul>
         </section>
 
+        <section className="rules-host" aria-labelledby="rules-host-heading">
+          <img
+            alt="Ink portrait of Joshua Brain Jaffe"
+            className="rules-host-portrait"
+            height={212}
+            src="/host-portrait.svg"
+            width={184}
+          />
+          <div>
+            <h2 id="rules-host-heading">Need help? Find this guy:</h2>
+            <p className="rules-host-name">Joshua Brain Jaffe</p>
+            <p>The bearded guy with the mohawk and foxes tattooed on his head.</p>
+          </div>
+        </section>
+
         <div className="rules-actions">
           <Link className="primary-button" href="/play">
             Back to my game <span aria-hidden="true">→</span>

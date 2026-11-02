@@ -1748,6 +1748,44 @@ html:has(.live-screen) {
   gap: 1rem;
 }
 
+.rules-host {
+  display: grid;
+  grid-template-columns: minmax(6rem, 9rem) minmax(0, 1fr);
+  align-items: center;
+  gap: 1.25rem;
+  border: 1px solid var(--color-guide);
+  border-left: 0.6rem solid var(--color-slate);
+  padding: 1.25rem;
+  background: var(--color-brand-eggshell);
+}
+
+.rules-host-portrait {
+  width: 100%;
+  height: auto;
+}
+
+.rules-host h2 {
+  margin: 0 0 0.35rem;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.rules-host p {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.rules-host .rules-host-name {
+  margin-bottom: 0.35rem;
+  color: var(--color-primary);
+  font-family: var(--font-display), sans-serif;
+  font-size: 2.5rem;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
 .rules-actions .primary-button {
   width: min(100%, 22rem);
 }

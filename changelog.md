@@ -225,3 +225,9 @@ item should be committed and pushed separately.
   playing!" above a larger QR (~410px at 1080p), letting Poppy's head show
   above it. The side gutter that kept content off Poppy is removed in screen
   mode. Measured at 1920x1080: fits exactly with no scrolling.
+- Live board badge reads "Game starts at 10am" before the host starts the
+  game (was "Starts soon"); it still switches to "Live" and "Final" from the
+  real game status.
+- Rules page: added a "Need help? Find this guy" panel at the bottom with
+  the host's ink portrait (`public/host-portrait.svg`, copied from the
+  jbj-site references; no scripts or external links).
